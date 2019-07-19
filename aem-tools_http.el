@@ -26,6 +26,7 @@
 ;; 
 
 ;;; Code:
+(require 'json)
 (require 'seq)
 (require 'url)
 
