@@ -247,7 +247,6 @@
                        (jcr:lastModified   nil 32 t)
                        (jcr:lastModifiedBy nil 25 t))
   :sort-key          '(rep:principalName))
-  :sort-key          '(rep:principalName))
 
 
   ; Interactive Function to Call
