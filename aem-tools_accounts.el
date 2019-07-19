@@ -27,7 +27,7 @@
 
 ;;; Code:
 (require 'seq)
-(require 'url)
+(require 'url-http)
 
 
 ;; Accounts
