@@ -128,3 +128,7 @@
   (interactive)
 
   (bui-list-get-display-entries 'aem:packages))
+
+(provide 'aem-tools_packages)
+
+;;; aem-tools_packages.el ends here

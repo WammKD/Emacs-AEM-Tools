@@ -103,3 +103,7 @@
   (interactive)
 
   (bui-list-get-display-entries 'aem:bundles))
+
+(provide 'aem-tools_bundles)
+
+;;; aem-tools_bundles.el ends here

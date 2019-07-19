@@ -38,3 +38,7 @@
   ; Create default local accounts
 (aem-account-create "http://localhost" "4502" "admin" "admin" "localhost_author")
 (aem-account-create "http://localhost" "4503" "admin" "admin" "localhost_publish")
+
+(provide 'aem-tools)
+
+;;; aem-tools.el ends here

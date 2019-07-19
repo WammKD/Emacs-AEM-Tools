@@ -90,3 +90,7 @@
                               (format "%s" (cdr-assoc 'result result))
                               'font-lock-face '(:foreground "purple")))))))))
       (message "Groovy console or output buffer doesn't exist!"))))
+
+(provide 'aem-tools_groovy)
+
+;;; aem-tools_groovy.el ends here
