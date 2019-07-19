@@ -33,19 +33,6 @@
 (require 'aem-tools_http)
 
 
-(defconst aem-REQUEST_GET    "GET"
-  "String constant to represent choosing a GET HTTP request.")
-(defconst aem-REQUEST_PUT    "PUT"
-  "String constant to represent choosing a PUT HTTP request.")
-(defconst aem-REQUEST_POST   "POST"
-  "String constant to represent choosing a POST HTTP request.")
-(defconst aem-REQUEST_PATCH  "PATCH"
-  "String constant to represent choosing a PATCH HTTP request.")
-(defconst aem-REQUEST_DELETE "DELETE"
-  "String constant to represent choosing a DELETE HTTP request.")
-
-
-
 ;; Accounts
 (defconst aem--accounts                (list)
   "List of AEM server credentials.")

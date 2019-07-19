@@ -30,6 +30,18 @@
 (require 'url)
 
 
+(defconst aem--REQUEST_GET    "GET"
+  "String constant to represent choosing a GET HTTP request.")
+(defconst aem--REQUEST_PUT    "PUT"
+  "String constant to represent choosing a PUT HTTP request.")
+(defconst aem--REQUEST_POST   "POST"
+  "String constant to represent choosing a POST HTTP request.")
+(defconst aem--REQUEST_PATCH  "PATCH"
+  "String constant to represent choosing a PATCH HTTP request.")
+(defconst aem--REQUEST_DELETE "DELETE"
+  "String constant to represent choosing a DELETE HTTP request.")
+
+
 ;; Utility
 (defun cdr-assoc (key assoc-list)
   "A simple utility function to run (cdr (assoc KEY ASSOC-LIST))."
@@ -89,7 +101,7 @@ using the `url.el' package."
 (defun aem-get-bundles (domain &optional callback)
   ""
   (aem-request
-    aem-REQUEST_GET
+    aem--REQUEST_GET
     (aem-create-URI domain "/system/console/bundles.json")
     '()
     '()
@@ -99,7 +111,7 @@ using the `url.el' package."
 (defun aem-stop-bundle (domain bundle-name &optional callback)
   ""
   (aem-request
-    aem-REQUEST_POST
+    aem--REQUEST_POST
     (aem-create-URI domain "/system/console/bundles/" bundle-name)
     '()
     '(("action" . "stop"))
@@ -109,7 +121,7 @@ using the `url.el' package."
 (defun aem-start-bundle (domain bundle-name &optional callback)
   "Port should be 4505?"
   (aem-request
-    aem-REQUEST_POST
+    aem--REQUEST_POST
     (aem-create-URI domain "/system/console/bundles/" bundle-name)
     '()
     '(("action" . "start"))
@@ -123,7 +135,7 @@ using the `url.el' package."
   ""
 
   (aem-request
-    aem-REQUEST_POST
+    aem--REQUEST_POST
     (aem-create-URI domain "/crx/packmgr/service.jsp?cmd=ls")
     '()
     '()
@@ -146,7 +158,7 @@ using the `url.el' package."
   ""
 
   (aem-request
-    aem-REQUEST_GET
+    aem--REQUEST_GET
     (aem-create-URI domain "/bin/querybuilder.json?" (if (consp queries)
                                                          (aem-concat-amps queries)
                                                        queries))
@@ -187,7 +199,7 @@ using the `url.el' package."
   ""
 
   (aem-request
-    aem-REQUEST_POST
+    aem--REQUEST_POST
     (aem-create-URI domain "/bin/groovyconsole/post.json")
     '(("Content-Type" . "application/x-www-form-urlencoded"))
     `((script . ,script))
@@ -198,7 +210,7 @@ using the `url.el' package."
   ""
 
   (aem-request
-    aem-REQUEST_POST
+    aem--REQUEST_POST
     (aem-create-URI domain "/bin/groovyconsole/post.json")
     '(("Content-Type" . "application/x-www-form-urlencoded"))
     `((script . ,(with-temp-buffer
@@ -214,7 +226,7 @@ using the `url.el' package."
 (defun aem-get-subnodes (domain path &optional callback)
   ""
   (aem-request
-    aem-REQUEST_GET
+    aem--REQUEST_GET
     (aem-create-URI domain path ".1.json")
     '()
     '()
@@ -224,7 +236,7 @@ using the `url.el' package."
 (defun aem-delete-node (domain path &optional callback)
   ""
   (aem-request
-    aem-REQUEST_DELETE
+    aem--REQUEST_DELETE
     (aem-create-URI domain path)
     '()
     '()
