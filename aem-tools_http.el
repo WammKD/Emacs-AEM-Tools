@@ -101,7 +101,7 @@ using the `url.el' package."
 ;; Bundles
 (defun aem-get-bundles (domain &optional callback)
   ""
-  (aem-request
+  (aem--request
     aem--REQUEST_GET
     (aem-create-URI domain "/system/console/bundles.json")
     '()
@@ -111,7 +111,7 @@ using the `url.el' package."
 
 (defun aem-stop-bundle (domain bundle-name &optional callback)
   ""
-  (aem-request
+  (aem--request
     aem--REQUEST_POST
     (aem-create-URI domain "/system/console/bundles/" bundle-name)
     '()
@@ -121,7 +121,7 @@ using the `url.el' package."
 
 (defun aem-start-bundle (domain bundle-name &optional callback)
   "Port should be 4505?"
-  (aem-request
+  (aem--request
     aem--REQUEST_POST
     (aem-create-URI domain "/system/console/bundles/" bundle-name)
     '()
@@ -135,7 +135,7 @@ using the `url.el' package."
 (defun aem-get-packages (domain &optional callback)
   ""
 
-  (aem-request
+  (aem--request
     aem--REQUEST_POST
     (aem-create-URI domain "/crx/packmgr/service.jsp?cmd=ls")
     '()
@@ -158,7 +158,7 @@ using the `url.el' package."
 (defun aem-query (domain queries &optional callback)
   ""
 
-  (aem-request
+  (aem--request
     aem--REQUEST_GET
     (aem-create-URI domain "/bin/querybuilder.json?" (if (consp queries)
                                                          (aem-concat-amps queries)
@@ -199,7 +199,7 @@ using the `url.el' package."
 (defun aem-groovy-run-script (domain script &optional callback)
   ""
 
-  (aem-request
+  (aem--request
     aem--REQUEST_POST
     (aem-create-URI domain "/bin/groovyconsole/post.json")
     '(("Content-Type" . "application/x-www-form-urlencoded"))
@@ -210,7 +210,7 @@ using the `url.el' package."
 (defun aem-groovy-run-file (domain filePath &optional callback)
   ""
 
-  (aem-request
+  (aem--request
     aem--REQUEST_POST
     (aem-create-URI domain "/bin/groovyconsole/post.json")
     '(("Content-Type" . "application/x-www-form-urlencoded"))
@@ -226,7 +226,7 @@ using the `url.el' package."
 ;; CRXde
 (defun aem-get-subnodes (domain path &optional callback)
   ""
-  (aem-request
+  (aem--request
     aem--REQUEST_GET
     (aem-create-URI domain path ".1.json")
     '()
@@ -236,7 +236,7 @@ using the `url.el' package."
 
 (defun aem-delete-node (domain path &optional callback)
   ""
-  (aem-request
+  (aem--request
     aem--REQUEST_DELETE
     (aem-create-URI domain path)
     '()
