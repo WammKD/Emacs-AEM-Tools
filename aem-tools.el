@@ -34,63 +34,6 @@
 
 
 ;; Accounts
-(defconst aem--accounts                (list)
-  "List of AEM server credentials.")
-(defconst aem--accounts-current-active (car aem--accounts)
-  "AEM server credentials to use when using AEM tools.")
-
-
-  ; Account Struct.
-(cl-defstruct (aem--account (:constructor aem--account-create)
-                            (:conc-name   aem--account-get-))
-  (domain                        "http://localhost")
-  (port                                      "4502")
-  (auth-base64 (base64-encode-string "admin:admin"))
-  (alias                         "localhost_author"))
-
-(defun aem--account-get-uri (account)
-  "Create a proper form for a URI from the domain and port of an account."
-
-  (concat (aem--account-get-domain account) ":" (aem--account-get-port account)))
-
-
-  ; User tools to handle Accounts
-(defun aem-account-create (domain port username password alias)
-  "Create an account for use with AEM tools from AEM server credentials."
-
-  (let ((account (aem--account-create :domain      domain
-                                      :port        port
-                                      :auth-base64 (base64-encode-string
-                                                     (concat username ":" password))
-                                      :alias       alias)))
-    (add-to-list 'aem--accounts account)
-
-    (setq url-http-real-basic-auth-storage (cons
-                                             (list
-                                               (replace-regexp-in-string
-                                                 "^http://"
-                                                 ""
-                                                 (aem--account-get-uri account))
-                                               (cons
-                                                 (aem--account-get-alias account)
-                                                 (aem--account-get-auth-base64 account)))
-                                             url-http-real-basic-auth-storage))))
-
-(defun aem-account-choose-active ()
-  ""
-  (interactive)
-
-  (let ((chosen (ido-completing-read "Choose account: " (mapcar
-                                                          'aem--account-get-alias
-                                                          aem--accounts))))
-    (setq aem--accounts-current-active (car (seq-filter
-                                              (lambda (alias)
-                                                (string-equal
-                                                  (aem--account-get-alias alias)
-                                                  chosen))
-                                              aem--accounts)))))
-
-
   ; Create default local accounts
 (aem-account-create "http://localhost" "4502" "admin" "admin" "localhost_author")
 (aem-account-create "http://localhost" "4503" "admin" "admin" "localhost_publish")
