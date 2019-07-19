@@ -57,6 +57,17 @@
 
   (apply 'concat (cons (directory-file-name domain) rest)))
 
+(defun aem--concat-amps (args)
+  "Converts ARGS, a list of pairs, to a string of \"key1=val1&key2=val2\"."
+
+  (seq-reduce (lambda (result elem)
+                (concat
+                  result
+                  (if (string-empty-p result) "" "&")
+                  (url-hexify-string (format "%s" (car elem)))
+                  "="
+                  (url-hexify-string (format "%s" (cdr elem))))) args ""))
+
 (defun aem--process (buffer url type)
   "Handles and parses the returned string from a call to `url-retrieve' or
 `url-retrieve-synchronously'."
@@ -73,20 +84,9 @@
   "Puts together the various elements needed to make various HTTP calls
 using the `url.el' package."
 
-  (let ((url-request-method        reqMeth)
-        (url-request-extra-headers headers)
-        (url-request-data          (seq-reduce
-                                     (lambda (result elem)
-                                       (concat
-                                         result
-                                         (if (string-empty-p result) "" "&")
-                                         (url-hexify-string
-                                           (format "%s" (car elem)))
-                                         "="
-                                         (url-hexify-string
-                                           (format "%s" (cdr elem)))))
-                                     data
-                                     "")))
+  (let ((url-request-method                        reqMeth)
+        (url-request-extra-headers                 headers)
+        (url-request-data          (aem--concat-amps data)))
     (if async-p
         (url-retrieve finalDomain `(lambda (status)
                                      (funcall ,async-p (aem--process
@@ -161,7 +161,7 @@ using the `url.el' package."
   (aem--request
     aem--REQUEST_GET
     (aem--create-URI domain "/bin/querybuilder.json?" (if (consp queries)
-                                                          (aem-concat-amps queries)
+                                                          (aem--concat-amps queries)
                                                         queries))
     '()
     '()
