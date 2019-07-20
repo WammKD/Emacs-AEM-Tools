@@ -117,9 +117,18 @@
                       (lambda (item _)
                         (insert-text-button
                           (symbol-name (car item))
-                          'properties (cdr item)
+                          'properties (cons
+                                        (cadr item)
+                                        (mapcar
+                                          (lambda (prop)
+                                            `((name  . ,(car prop))
+                                              (value . ,(cdr prop))))
+                                          (aem--get-node-properties (cddr item))))
                           'action     (lambda (b)
-                                        (message (format "%s" (aem-get-node-properties (cdr (button-get b 'properties))))))))))
+                                        (bui-list-get-display-entries
+                                          'aem:node-properties
+                                          'id
+                                          (cdr (button-get b 'properties))))))))
 
   (local-set-key (kbd "l") 'recenter-top-bottom)
   (local-set-key (kbd "n") 'widget-forward)
