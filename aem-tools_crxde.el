@@ -88,6 +88,25 @@
     hierarchy))
 
 
+  ; Entries
+(defun aem--node-properties-get-entries (&optional searchType &rest searchValues)
+  ""
+
+  (pcase (or searchType 'all)
+    ('id       (car searchValues))
+    (otherwise (error "Unknown search type: %S" searchType))))
+
+(bui-define-entry-type aem:node-properties
+  :get-entries-function #'aem--node-properties-get-entries)
+
+
+  ; List
+(bui-define-interface aem:node-properties list
+  :buffer-name       "*Node Properties*"
+  :format            '((name  nil 49 t)
+                       (value nil 97 5)))
+
+
   ; Interactive Functions to Call
 (defun aem-crxde (path)
   "Display content subnodes."
