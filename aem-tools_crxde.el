@@ -196,15 +196,18 @@
                               (let ((b (button-at (point))))
                                 (widget-backward 1)
 
-  (local-set-key (kbd "e")
-    '(lambda ()
-       (interactive)
+                                (aem--crxde-open-in-browser
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "e") '(lambda ()
+                              (interactive)
 
-       (forward-button 1)
+                              (forward-button 1)
 
-       (let ((b (button-at (point))))
-         (widget-backward 1)
+                              (let ((b (button-at (point))))
+                                (widget-backward 1)
 
+                                (aem--crxde-open-page-in-browser
+                                  (car (button-get b 'properties)))))))
 
 (provide 'aem-tools_crxde)
 
