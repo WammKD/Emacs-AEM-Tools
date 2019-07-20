@@ -102,10 +102,10 @@
 
   ; List
 (bui-define-interface aem:node-properties list
-  :buffer-name       "*Node Properties*"
-  :format            '((name  nil 49 t)
-                       (value nil 97 5))
-  :sort-key          '(name))
+  :buffer-name "*Node Properties*"
+  :format      '((name  nil 49 t)
+                 (value nil 97 5))
+  :sort-key    '(name))
 
 
   ; Interactive Functions to Call
