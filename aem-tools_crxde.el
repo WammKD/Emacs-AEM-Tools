@@ -150,7 +150,7 @@
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-page-in-browser))
 
-(define-key aem:node-properties-list-mode-map (kbd "g") 'aem-node-properties-open-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "c") 'aem-node-properties-open-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "e") 'aem-node-properties-open-page-in-browser)
 
 (defun aem-crxde (path)
@@ -188,7 +188,7 @@
                                 (widget-backward 1)
 
                                 (button-activate b))))
-  (local-set-key (kbd "g") '(lambda ()
+  (local-set-key (kbd "c") '(lambda ()
                               (interactive)
 
                               (forward-button 1)
