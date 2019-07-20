@@ -142,7 +142,43 @@
                               (let ((b (button-at (point))))
                                 (widget-backward 1)
 
-                                (button-activate b)))))
+                                (button-activate b))))
+  (local-set-key (kbd "g") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (widget-backward 1)
+
+                                (browse-url (concat
+                                              (aem--account-get-uri
+                                                aem--accounts-current-active)
+                                              "/crx/de/index.jsp#"
+                                              (car (button-get b 'properties)))))))
+  (local-set-key (kbd "e")
+    '(lambda ()
+       (interactive)
+
+       (forward-button 1)
+
+       (let ((b (button-at (point))))
+         (widget-backward 1)
+
+         (let* ((pa (car (button-get b 'properties)))
+                (p  (substring pa 0 (string-match-p "/jcr:content" pa))))
+           (if (equal
+                 (cdr-assoc
+                   'jcr:primaryType
+                   (aem-get-subnodes (aem--account-get-uri
+                                       aem--accounts-current-active) p))
+                 "cq:Page")
+               (browse-url (concat
+                             (aem--account-get-uri aem--accounts-current-active)
+                             "/editor.html"
+                             p
+                             ".html"))
+             (message "There's no page anywhere on the path of this node!")))))))
 
 (provide 'aem-tools_crxde)
 
