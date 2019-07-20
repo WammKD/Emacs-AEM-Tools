@@ -132,6 +132,27 @@
                       pagePath                                            ".html"))
       (message "There's no page anywhere on the path of this node!"))))
 
+(defun aem--crxde-run-operation-on-node-properties (operation)
+  ""
+
+  (dolist (node (or (bui-list-get-marked-id-list) (list (bui-list-current-id))))
+    (funcall operation node)))
+
+(defun aem-node-properties-open-in-browser ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-in-browser))
+
+(defun aem-node-properties-open-page-in-browser ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-page-in-browser))
+
+(define-key aem:node-properties-list-mode-map (kbd "g") 'aem-node-properties-open-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "e") 'aem-node-properties-open-page-in-browser)
+
 (defun aem-crxde (path)
   "Display content subnodes."
   (interactive (list (read-string "Path to retrieve: ")))
