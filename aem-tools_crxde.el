@@ -57,8 +57,8 @@
         (cons
           refined-path
           (aem--get-node-properties
-            (aem--get-subnodes (aem--account-get-uri
-                                 aem--accounts-current-active) refined-path)))))))
+            (aem-get-subnodes (aem--account-get-uri
+                                aem--accounts-current-active) refined-path)))))))
 
 (defun aem-build-node-hierarchy (path)
   ""
@@ -78,7 +78,7 @@
                                 (cons name (cons
                                              (concat path "/" (symbol-name name))
                                              (cdr subnode)))))
-                            (aem-get-node-subnodes
+                            (aem--get-node-subnodes
                               (aem-get-subnodes
                                 (aem--account-get-uri         aem--accounts-current-active)
                                 path))))))))
