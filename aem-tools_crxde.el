@@ -109,6 +109,29 @@
 
 
   ; Interactive Functions to Call
+(defun aem--crxde-open-in-browser (nodeProps)
+  ""
+
+  (browse-url (concat
+                (aem--account-get-uri aem--accounts-current-active)
+                "/crx/de/index.jsp#"
+                (cdr-assoc 'path nodeProps))))
+(defun aem--crxde-open-page-in-browser (nodeProps)
+  ""
+
+  (let* ((path                                 (cdr-assoc 'path nodeProps))
+         (pagePath (substring path 0 (string-match-p "/jcr:content" path))))
+    (if (equal
+          (cdr-assoc
+            'jcr:primaryType
+            (aem-get-subnodes (aem--account-get-uri
+                                aem--accounts-current-active) pagePath))
+          "cq:Page")
+        (browse-url (concat
+                      (aem--account-get-uri aem--accounts-current-active) "/editor.html"
+                      pagePath                                            ".html"))
+      (message "There's no page anywhere on the path of this node!"))))
+
 (defun aem-crxde (path)
   "Display content subnodes."
   (interactive (list (read-string "Path to retrieve: ")))
@@ -118,18 +141,19 @@
                       (lambda (item _)
                         (insert-text-button
                           (symbol-name (car item))
-                          'properties (cons
-                                        (cadr item)
+                          'properties (let ((p (cadr item)))
                                         (mapcar
                                           (lambda (prop)
-                                            `((name  . ,(car prop))
-                                              (value . ,(cdr prop))))
+                                            (let ((pa `((name  . ,(car prop))
+                                                        (value . ,(cdr prop))
+                                                        (path  .          ,p))))
+                                              `((id . ,pa) . ,pa)))
                                           (aem--get-node-properties (cddr item))))
                           'action     (lambda (b)
                                         (bui-list-get-display-entries
                                           'aem:node-properties
                                           'id
-                                          (cdr (button-get b 'properties))))))))
+                                          (button-get b 'properties)))))))
 
   (local-set-key (kbd "l") 'recenter-top-bottom)
   (local-set-key (kbd "n") 'widget-forward)
@@ -151,11 +175,6 @@
                               (let ((b (button-at (point))))
                                 (widget-backward 1)
 
-                                (browse-url (concat
-                                              (aem--account-get-uri
-                                                aem--accounts-current-active)
-                                              "/crx/de/index.jsp#"
-                                              (car (button-get b 'properties)))))))
   (local-set-key (kbd "e")
     '(lambda ()
        (interactive)
@@ -165,20 +184,6 @@
        (let ((b (button-at (point))))
          (widget-backward 1)
 
-         (let* ((pa (car (button-get b 'properties)))
-                (p  (substring pa 0 (string-match-p "/jcr:content" pa))))
-           (if (equal
-                 (cdr-assoc
-                   'jcr:primaryType
-                   (aem-get-subnodes (aem--account-get-uri
-                                       aem--accounts-current-active) p))
-                 "cq:Page")
-               (browse-url (concat
-                             (aem--account-get-uri aem--accounts-current-active)
-                             "/editor.html"
-                             p
-                             ".html"))
-             (message "There's no page anywhere on the path of this node!")))))))
 
 (provide 'aem-tools_crxde)
 
