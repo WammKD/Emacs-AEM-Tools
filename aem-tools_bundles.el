@@ -104,28 +104,36 @@
                        (bui-list-get-marked-id-list)
                        (list (bui-list-current-id)))))
 
-  (let ((stop-p)
-        (fiNa ""))
-    (dolist (bundle bundles)
-      (let ((name (cdr-assoc 'name   bundle))
-            (id   (cdr-assoc 'realID bundle)))
-        (if (= (cdr-assoc 'stateRaw bundle) 32)
-            (when (yes-or-no-p (concat "Really stop bundle \"" name "\"? "))
-              (aem-stop-bundle
-                (aem--account-get-uri aem--accounts-current-active)
-                (number-to-string id))
+  (let ((ss (seq-reduce
+              (lambda (result bundle)
+                (let ((name                            (cdr-assoc 'name   bundle))
+                      (id                              (cdr-assoc 'realID bundle))
+                      (domain (aem--account-get-uri aem--accounts-current-active)))
+                  (if (= (cdr-assoc 'stateRaw bundle) 32)
+                      (when (yes-or-no-p
+                              (concat "Really stop bundle \"" name "\"? "))
+                        (aem-stop-bundle domain (number-to-string id))
 
-              (setq stop-p t))
-          (aem-start-bundle (aem--account-get-uri
-                              aem--accounts-current-active) (number-to-string id))
+                        (cons (car result) (concat ", \"" name "\"" (cdr result))))
+                    (aem-start-bundle domain (number-to-string id))
 
-          (setq stop-p nil))
-
-        (setq fiNa name)))
-
+                    (cons (concat ", \"" name "\"" (car result)) (cdr result)))))
+              bundles
+              '("" . ""))))
     (revert-buffer nil t)
 
-    (message (concat (if stop-p "Stopping" "Starting") " bundle \"" fiNa "\"…"))))
+    (message (let* ((startList             (car ss))
+                    ( stopList             (cdr ss))
+                    (startLength (length startList))
+                    ( stopLength (length  stopList)))
+               (concat
+                 (if (< startLength 2)
+                     ""
+                   (concat "Starting bundle(s) " (substring startList 2) "…"))
+                 (if (or (< startLength 2) (< stopLength 2)) "" "\n\n")
+                 (if (< (length stopList) 2)
+                     ""
+                   (concat "Stopping bundle(s) " (substring stopList 2) "…")))))))
 
 (define-key aem:bundles-list-mode-map (kbd "S") 'aem-bundles-start-or-stop-bundle)
 
