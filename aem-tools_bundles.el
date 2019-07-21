@@ -110,8 +110,9 @@
                       (id                              (cdr-assoc 'realID bundle))
                       (domain (aem--account-get-uri aem--accounts-current-active)))
                   (if (= (cdr-assoc 'stateRaw bundle) 32)
-                      (when (yes-or-no-p
-                              (concat "Really stop bundle \"" name "\"? "))
+                      (if (not (yes-or-no-p
+                                 (concat "Really stop bundle \"" name "\"? ")))
+                          result
                         (aem-stop-bundle domain (number-to-string id))
 
                         (cons (car result) (concat ", \"" name "\"" (cdr result))))
