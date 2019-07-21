@@ -139,6 +139,33 @@
 (define-key aem:bundles-list-mode-map (kbd "S") 'aem-bundles-start-or-stop-bundle)
 
 
+(defun aem-bundles-uninstall-bundle (bundles)
+  "Uninstall the bundle at point or all marked, depending on the state."
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (let ((u (seq-reduce
+             (lambda (result bundle)
+               (let ((name                            (cdr-assoc 'name   bundle))
+                     (id                              (cdr-assoc 'realID bundle))
+                     (domain (aem--account-get-uri aem--accounts-current-active)))
+                 (if (not (yes-or-no-p
+                            (concat "Really uninstall bundle \"" name "\"? ")))
+                     result
+                   (aem-uninstall-bundle domain (number-to-string id))
+
+                   (concat ", \"" name "\"" result))))
+             bundles
+             "")))
+    (revert-buffer nil t)
+
+    (message (concat "Uninstalling bundle(s) " u "…"))))
+
+(define-key aem:bundles-list-mode-map (kbd "d") 'aem-bundles-uninstall-bundle)
+(define-key aem:bundles-list-mode-map (kbd "u") 'aem-bundles-uninstall-bundle)
+
+
 (defun aem-bundles ()
   "Display a list of AEM bundles for an instance."
   (interactive)
