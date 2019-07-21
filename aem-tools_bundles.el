@@ -98,6 +98,38 @@
 
 
   ; Interactive Function to Call
+(defun aem-bundles-start-or-stop-bundle (bundles)
+  "Start or stop the bundle at point or all marked, depending on the state."
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (let ((stop-p)
+        (fiNa ""))
+    (dolist (bundle bundles)
+      (let ((name (cdr-assoc 'name   bundle))
+            (id   (cdr-assoc 'realID bundle)))
+        (if (= (cdr-assoc 'stateRaw bundle) 32)
+            (when (yes-or-no-p (concat "Really stop bundle \"" name "\"? "))
+              (aem-stop-bundle
+                (aem--account-get-uri aem--accounts-current-active)
+                (number-to-string id))
+
+              (setq stop-p t))
+          (aem-start-bundle (aem--account-get-uri
+                              aem--accounts-current-active) (number-to-string id))
+
+          (setq stop-p nil))
+
+        (setq fiNa name)))
+
+    (revert-buffer nil t)
+
+    (message (concat (if stop-p "Stopping" "Starting") " bundle \"" fiNa "\"…"))))
+
+(define-key aem:bundles-list-mode-map (kbd "S") 'aem-bundles-start-or-stop-bundle)
+
+
 (defun aem-bundles ()
   "Display a list of AEM bundles for an instance."
   (interactive)
