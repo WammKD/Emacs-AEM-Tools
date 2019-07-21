@@ -60,10 +60,10 @@
             (aem-get-subnodes (aem--account-get-uri
                                 aem--accounts-current-active) refined-path)))))))
 
-(defun aem-build-node-hierarchy (path)
+(defun aem-build-node-hierarchy (path &optional hierarchyToUse)
   ""
 
-  (let ((hierarchy  (hierarchy-new))
+  (let ((hierarchy  (or hierarchyToUse (hierarchy-new)))
         (  parentfn (lambda (hier-elem)
                       (when hier-elem
                         (aem-get-node-hierarchy-elem
