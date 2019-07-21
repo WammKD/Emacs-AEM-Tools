@@ -76,11 +76,14 @@
                             (lambda (subnode)
                               (let ((name (car subnode)))
                                 (cons name (cons
-                                             (concat path "/" (symbol-name name))
+                                             (concat
+                                               path
+                                               (if (string-equal "/" path) "" "/")
+                                               (symbol-name name))
                                              (cdr subnode)))))
                             (aem--get-node-subnodes
                               (aem-get-subnodes
-                                (aem--account-get-uri         aem--accounts-current-active)
+                                (aem--account-get-uri aem--accounts-current-active)
                                 path))))))))
     (hierarchy-add-tree hierarchy (aem-get-node-hierarchy-elem path)
                         nil       childrenfn                         nil t)
