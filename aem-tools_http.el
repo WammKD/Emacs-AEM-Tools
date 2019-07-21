@@ -129,6 +129,16 @@ using the `url.el' package."
     'dunno
     callback))
 
+(defun aem-uninstall-bundle (domain bundle-name &optional callback)
+  "Port should be 4505?"
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain "/system/console/bundles/" bundle-name)
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    '((action . uninstall))
+    'dunno
+    callback))
+
 
 
 ;; Packages
