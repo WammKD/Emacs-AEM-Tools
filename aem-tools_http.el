@@ -114,8 +114,8 @@ using the `url.el' package."
   (aem--request
     aem--REQUEST_POST
     (aem--create-URI domain "/system/console/bundles/" bundle-name)
-    '()
-    '(("action" . "stop"))
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    '((action . stop))
     'dunno
     callback))
 
@@ -124,8 +124,8 @@ using the `url.el' package."
   (aem--request
     aem--REQUEST_POST
     (aem--create-URI domain "/system/console/bundles/" bundle-name)
-    '()
-    '(("action" . "start"))
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    '((action . start))
     'dunno
     callback))
 
