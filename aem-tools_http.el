@@ -196,6 +196,19 @@ using the `url.el' package."
 
 
 ;; Groovy
+(defun aem-get-workflows (domain &optional callback)
+  ""
+
+  (cdr-assoc 'hits (aem-query domain '((path           . /var/workflow/models)
+                                       (property       .      jcr:primaryType)
+                                       (property.value .     cq:WorkflowModel)
+                                       (p.limit        .                   -1)
+                                       (p.hits         .                 full)
+                                       (p.nodedepth    .                   -1)))))
+
+
+
+;; Groovy
 (defun aem-groovy-run-script (domain script &optional callback)
   ""
 
