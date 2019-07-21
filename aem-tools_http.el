@@ -205,7 +205,7 @@ using the `url.el' package."
 
 
 
-;; Groovy
+;; Workflows
 (defun aem-get-workflows (domain &optional callback)
   ""
 
