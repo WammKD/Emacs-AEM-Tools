@@ -188,22 +188,36 @@
             (lastUnpacked   format   (time))
             (lastUnpackedBy format (format))))
 
+
 (defun aem--packages-list-describe (&rest packages)
   "Display 'info' buffer for PACKAGES."
 
   (bui-get-display-entries 'aem:packages 'info (cons 'id packages)))
+(defun aem--packages-simplified-list-describe (&rest packages)
+  "Display 'info' buffer for PACKAGES."
+
+  (bui-get-display-entries 'aem:packages-simplified 'info (cons 'id packages)))
 
 
   ; List
 (bui-define-interface aem:packages list
   :buffer-name       "*Packages*"
   :describe-function 'aem--packages-list-describe
+  :format            '((name               nil 55 t)
+                       (version            nil 24 t)
+                       (:jcr:data          nil 10 bui-list-sort-numerically-3 :right-align t)
+                       (jcr:lastModified   nil 32 t)
+                       (jcr:lastModifiedBy nil 25 t))
+  :sort-key          '(jcr:lastModified))
+(bui-define-interface aem:packages-simplified list
+  :buffer-name       "*Packages, Simplified*"
+  :describe-function 'aem--packages-simplified-list-describe
   :format            '((name           nil 55 t)
                        (version        nil 24 t)
                        (size           nil 10 bui-list-sort-numerically-3 :right-align t)
                        (lastModified   nil 32 t)
                        (lastModifiedBy nil 25 t))
-  :sort-key          '(lastModified))
+  :sort-key          '(jcr:lastModified))
 
 
   ; Interactive Functions to Call
@@ -226,6 +240,11 @@
   (interactive)
 
   (bui-list-get-display-entries 'aem:packages))
+(defun aem-packages-simplified ()
+  "Display a list of AEM packages for an instance."
+  (interactive)
+
+  (bui-list-get-display-entries 'aem:packages-simplified))
 
 (provide 'aem-tools_packages)
 
