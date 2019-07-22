@@ -112,14 +112,35 @@
                                            aem--accounts-current-active))))))))))
     (otherwise (error "Unknown search type: %S" searchType))))
 
+
 (bui-define-entry-type aem:packages
+  :titles                 (jcr:uuid           . "UUID")
+                          (fixedBugs          . "Fixed Bugs")
+                          (:jcr:data          . "File Size")
+                          (jcr:path           . "Path")
+                          (builtWith          . "Built With")
+                          (buildCount         . "Build Count")
+                          (providerName       . "Provider Name")
+                          (providerUrl        . "Provider URL")
+                          (providerLink       . "Provider Link")
+                          (testedWith         . "Tested With")
+                          (jcr:created        . "Last Created")
+                          (jcr:createdBy      . "Last Created By")
+                          (jcr:lastModified   . "Last Modified")
+                          (jcr:lastModifiedBy . "Last Modified By")
+                          (lastWrapped        . "Last Wrapped")
+                          (lastWrappedBy      . "Last Wrapped By")
+                          (lastUnwrapped      . "Last Unwrapped")
+                          (lastUnwrappedBy    . "Last Unwrapped By"))
+  :get-entries-function #'aem--packages-get-entries)
+(bui-define-entry-type aem:packages-simplified
   :titles               '((downloadName   . "Download Name")
                           (createdBy      . "Created By")
                           (lastModified   . "Last Modified")
                           (lastModifiedBy . "Last Modified By")
                           (lastUnpacked   . "Last Unpacked")
                           (lastUnpackedBy . "Last Unpacked By"))
-  :get-entries-function #'aem--packages-get-entries)
+  :get-entries-function #'aem--packages-get-entries-simplified)
 
 
   ; Info.
