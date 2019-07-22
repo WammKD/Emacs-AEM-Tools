@@ -145,6 +145,18 @@ using the `url.el' package."
 (defun aem-get-packages (domain &optional callback)
   ""
 
+  (cdr-assoc 'hits (aem-query domain '((path           .   /etc/packages)
+                                       (group.1_group.p.not . true)
+                                       (group.1_group.path  . */.snapshot)
+                                       (property       . jcr:primaryType)
+                                       (property.value .         nt:file)
+                                       (nodename       .           *.zip)
+                                       (p.limit        .              -1)
+                                       (p.hits         .            full)
+                                       (p.nodedepth    .              -1)))))
+(defun aem-get-packages-simplified (domain &optional callback)
+  ""
+
   (aem--request
     aem--REQUEST_POST
     (aem--create-URI domain "/crx/packmgr/service.jsp?cmd=ls")
