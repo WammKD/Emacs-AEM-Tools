@@ -41,6 +41,55 @@
 
   (pcase (or searchType 'all)
     ('id       searchValues)
+    ('all      (seq-reduce
+                 (lambda (result packageData)
+                   (if (string-match-p
+                         "/\\.snapshot/"
+                         (cdr-assoc 'jcr:path packageData))
+                       result
+                     (let* ((content (cdr-assoc 'jcr:content    packageData))
+                            (def     (cdr-assoc 'vlt:definition     content))
+                            (filts   (cdr-assoc 'filter                 def))
+                            (sShots  (cdr-assoc 'screenshots            def))
+                            (final   `(,(assoc 'jcr:uuid               content)
+                                       ,(assoc 'group                      def)
+                                       ,(assoc 'name                       def)
+                                       ,(assoc 'version                    def)
+                                       ,(assoc ':jcr:data              content)
+                                       ,(assoc 'jcr:path           packageData)
+                                       ,(assoc 'description                def)
+                                       ,(assoc 'fixedBugs                  def)
+                                       ,(assoc 'testedWith                 def)
+                                       ,(assoc 'builtWith                  def)
+                                       ,(assoc 'buildCount                 def)
+                                       ,(assoc 'providerName               def)
+                                       ,(assoc 'providerUrl                def)
+                                       ,(assoc 'providerLink               def)
+                                       ,(assoc 'jcr:created                def)
+                                       ,(assoc 'jcr:createdBy              def)
+                                       ,(assoc 'jcr:lastModified           def)
+                                       ,(assoc 'jcr:lastModifiedBy         def)
+                                       ,(assoc 'lastWrapped                def)
+                                       ,(assoc 'lastWrappedBy              def)
+                                       ,(assoc 'lastUnwrapped              def)
+                                       ,(assoc 'lastUnwrappedBy            def)
+                                       ,(cons 'filters (reverse (seq-reduce
+                                                                  (lambda (result filter)
+                                                                    (if (not (listp (cdr filter)))
+                                                                        result
+                                                                      (cons (cdr filter) result)))
+                                                                  filts
+                                                                  '()))))))
+                       (cons (cons (cons 'id final) final) result))))
+                 (aem-get-packages (aem--account-get-uri
+                                     aem--accounts-current-active))
+                 '()))
+    (otherwise (error "Unknown search type: %S" searchType))))
+(defun aem--packages-get-entries-simplified (&optional searchType &rest searchValues)
+  ""
+
+  (pcase (or searchType 'all)
+    ('id       searchValues)
     ('all      (mapcar
                  (lambda (packageData)
                    (let ((packageFinal (mapcar
