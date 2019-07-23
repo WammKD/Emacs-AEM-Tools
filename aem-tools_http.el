@@ -226,6 +226,17 @@ using the `url.el' package."
     'xml
     callback))
 
+(defun aem-add-user-to-group (domain username groupPath &optional callback)
+  ""
+
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain groupPath ".rw.html")
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    `((addMembers . ,username))
+    'xml
+    callback))
+
 
 
 ;; Groups
