@@ -166,6 +166,21 @@
 (define-key aem:bundles-list-mode-map (kbd "U") 'aem-bundles-uninstall-bundle)
 
 
+(defun aem-bundles-open-in-browser (bundles)
+  "Open node details in a web browser."
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (dolist (bundle bundles)
+    (browse-url (concat
+                  (aem--account-get-uri aem--accounts-current-active)
+                  "/system/console/bundles/"
+                  (number-to-string (cdr-assoc 'realID bundle))))))
+
+(define-key aem:bundles-list-mode-map (kbd "o") 'aem-bundles-open-in-browser)
+
+
 (defun aem-bundles ()
   "Display a list of AEM bundles for an instance."
   (interactive)
