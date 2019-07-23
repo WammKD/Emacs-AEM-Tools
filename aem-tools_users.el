@@ -199,6 +199,53 @@
 (define-key aem:users-info-mode-map (kbd "c") 'aem-users-create)
 
 
+(defun aem-users-set-profile (users)
+  ""
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (dolist (user users)
+    (let ((username (cdr-assoc 'rep:authorizableId user))
+          (path     (cdr-assoc 'jcr:path           user)))
+      (let ((settings (seq-reduce
+                        (lambda (result setting)
+                          (if (funcall (cadr setting) (caddr setting))
+                              (cons (cons (car setting) (caddr setting)) result)
+                            result))
+                        (list
+                          (list
+                            "givenName"
+                            (lambda (elem) (not (string-empty-p elem)))
+                            (read-string (concat username "'s first name to set "
+                                                 "(leave blank to skip): ")))
+                          (list
+                            "familyName"
+                            (lambda (elem) (not (string-empty-p elem)))
+                            (read-string (concat username "'s last name to set "
+                                                 "(leave blank to skip): ")))
+                          (list
+                            "email"
+                            (lambda (elem) (not (string-empty-p elem)))
+                            (read-string (concat username "'s E-mail to set "
+                                                 "(leave blank to skip): ")))
+                          (list
+                            "age"
+                            (lambda (elem) (and (> elem 0) (integerp elem)))
+                            (read-number (concat username "'s age to set (enter zero, "
+                                                 "negative, or decimal to skip): "))))
+                        '())))
+        (aem-set-user-profile
+          (aem--account-get-uri aem--accounts-current-active)
+          path
+          settings)
+
+        (message (concat "Updated " username "'s profile!"))))))
+
+(define-key aem:users-list-mode-map (kbd "S") 'aem-users-set-profile)
+
+
+
 
 
 
