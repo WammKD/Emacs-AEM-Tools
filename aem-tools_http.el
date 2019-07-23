@@ -214,6 +214,18 @@ using the `url.el' package."
     'xml
     callback))
 
+(defun aem-set-user-profile (domain path settings &optional callback)
+  ""
+
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain path ".rw.html")
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    (mapcar (lambda (setting)
+              (cons (concat "profile/" (car setting)) (cdr setting))) settings)
+    'xml
+    callback))
+
 
 
 ;; Groups
