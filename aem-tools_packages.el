@@ -114,7 +114,7 @@
 
 
 (bui-define-entry-type aem:packages
-  :titles                 (jcr:uuid           . "UUID")
+  :titles               '((jcr:uuid           . "UUID")
                           (fixedBugs          . "Fixed Bugs")
                           (:jcr:data          . "File Size")
                           (jcr:path           . "Path")
