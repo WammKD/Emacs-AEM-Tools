@@ -200,7 +200,7 @@
 
 
 (defun aem-users-set-profile (users)
-  ""
+  "Set profile information (such as first/last name, E-mail, etc.) for USERS."
   (interactive (list (or
                        (bui-list-get-marked-id-list)
                        (list (bui-list-current-id)))))
@@ -265,6 +265,43 @@
       (message (concat "Updated the profile(s) of " (substring s 2) "!")))))
 
 (define-key aem:users-list-mode-map (kbd "S") 'aem-users-set-profile)
+
+
+(defun aem-users-add-to-group (users)
+  "Add USERS to groups in AEM (list of groups provided by the function)."
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (let* ((uri    (aem--account-get-uri aem--accounts-current-active))
+         (groups (mapcar
+                   (lambda (group)
+                     (cons
+                       (cdr-assoc 'rep:authorizableId group)
+                       (cdr-assoc 'jcr:path           group)))
+                   (aem-get-groups uri)))
+         (names  (mapcar #'car groups))
+         (listOf (seq-reduce
+                   (lambda (result user)
+                     (let* (( username (cdr-assoc 'rep:authorizableId user))
+                            (groupName (ido-completing-read
+                                         (concat "Add " username " to which Group: ")
+                                         names)))
+                       (aem-add-user-to-group uri username (cdr-assoc
+                                                             groupName
+                                                             groups))
+
+                       (concat ", \"" username "\"" result)))
+                  users
+                  "")))
+    (when (> (length listOf) 2)
+      (when (eq major-mode 'aem:users-list-mode)
+        (revert-buffer nil t))
+
+      (message (concat "Updated groups with user(s) " (substring listOf 2) "!")))))
+
+(define-key aem:users-list-mode-map (kbd "a") 'aem-users-add-to-group)
+      
 
 
 
