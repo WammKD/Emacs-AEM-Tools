@@ -142,6 +142,61 @@
 
   (bui-list-get-display-entries 'aem:users))
 
+(defun aem-users-create (username password)
+  "Create an AEM user for an instance."
+  (interactive (list
+                 (read-string "New user's username: ")
+                 (read-passwd "New user's password: ")))
+
+  (let ((tbody  (assoc
+                  'tbody
+                  (assoc
+                    'table
+                    (assoc 'body (assoc 'html (aem-create-user
+                                                (aem--account-get-uri
+                                                  aem--accounts-current-active)
+                                                username
+                                                password))))))
+        (get-td (lambda (label body)
+                  (cadr (cdr-assoc
+                          'div
+                          (assoc
+                            'td
+                            (cdr (cdddar (seq-filter
+                                           (lambda (tr)
+                                             (and
+                                               (listp tr)
+                                               (string-equal
+                                                 (caddr (cadddr tr))
+                                                 label)))
+                                           body)))))))))
+    (pcase (funcall get-td "Status" tbody)
+      ("409"     (message "Username already exists!"))
+      ("201"     (pcase major-mode
+                   ('aem:users-list-mode (revert-buffer nil t)
+                                         (message (concat
+                                                    "User "
+                                                    username
+                                                    " created!")))
+                   ('aem:users-info-mode (bui-get-display-entries
+                                           'aem:users
+                                           'info
+                                           (cons 'id (list
+                                                       (aem-get-subnodes
+                                                         (aem--account-get-uri
+                                                           aem--accounts-current-active)
+                                                         (funcall get-td "Path" tbody))))))
+                   (otherwise            (message (concat
+                                                    "User created at "
+                                                    (funcall get-td "Path" tbody)
+                                                    "!")))))
+      (otherwise (message (concat
+                            "Unknown error: "
+                            (funcall get-td "Path" tbody)
+                            "!"))))))
+
+(define-key aem:users-list-mode-map (kbd "c") 'aem-users-create)
+(define-key aem:users-info-mode-map (kbd "c") 'aem-users-create)
 
 
 
