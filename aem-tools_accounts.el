@@ -85,7 +85,10 @@
                                                 (string-equal
                                                   (aem--account-get-alias alias)
                                                   chosen))
-                                              aem--accounts)))))
+                                              aem--accounts)))
+
+    (message (concat "Now using account " (aem--account-get-alias
+                                            aem--accounts-current-active) "!"))))
 
 (provide 'aem-tools_accounts)
 
