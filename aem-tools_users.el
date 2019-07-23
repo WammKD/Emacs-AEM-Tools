@@ -259,6 +259,9 @@
              users
              "")))
     (when (> (length s) 2)
+      (when (eq major-mode 'aem:users-list-mode)
+        (revert-buffer nil t))
+
       (message (concat "Updated the profile(s) of " (substring s 2) "!")))))
 
 (define-key aem:users-list-mode-map (kbd "S") 'aem-users-set-profile)
