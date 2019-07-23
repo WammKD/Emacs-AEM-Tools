@@ -203,6 +203,17 @@ using the `url.el' package."
                                        (p.limit        .              -1)
                                        (p.hits         .            full)))))
 
+(defun aem-create-user (domain username password &optional callback)
+  ""
+
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain "/libs/granite/security/post/authorizables")
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    `((createUser . "") (authorizableId . ,username) (rep:password . ,password))
+    'xml
+    callback))
+
 
 
 ;; Groups
