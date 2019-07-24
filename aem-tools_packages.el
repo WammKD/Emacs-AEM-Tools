@@ -128,6 +128,8 @@
                           (jcr:createdBy      . "Last Created By")
                           (jcr:lastModified   . "Last Modified")
                           (jcr:lastModifiedBy . "Last Modified By")
+                          (lastUnpacked       . "Last Unpacked")
+                          (lastUnpackedBy     . "Last Unpacked By")
                           (lastWrapped        . "Last Wrapped")
                           (lastWrappedBy      . "Last Wrapped By")
                           (lastUnwrapped      . "Last Unwrapped")
@@ -170,8 +172,13 @@
             (jcr:lastModified   format   (time))
             (jcr:lastModifiedBy format (format))
             nil
+            (lastUnpacked       format   (time))
+            (lastUnpackedBy     format (format))
+            nil
             (lastWrapped        format   (time))
-            (lastWrappedBy      format (format))))
+            (lastWrappedBy      format (format))
+            (lastUnwrapped      format   (time))
+            (lastUnwrappedBy    format (format))))
 (bui-define-interface aem:packages-simplified info
   :format '((group          format (format))
             (name           format (format))
