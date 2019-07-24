@@ -211,6 +211,39 @@
 
 
   ; Info.
+(bui-define-interface aem:packages info
+  :format '((group              format (format))
+            (groupTitle         format (format))
+            nil
+            (name               format (format))
+            (version            format (format))
+            (size               format (format))
+            (path               format (format))
+            nil
+            (description        format (format))
+            (fixedBugs          format (format))
+            (testedWith         format (format))
+            nil
+            (builtWith          format (format))
+            (buildCount         format (format))
+            nil
+            (providerName       format (format))
+            (providerUrl        format (format))
+            (providerLink       format (format))
+            nil
+            (created            format   (time))
+            (createdBy          format (format))
+            nil
+            (lastModified       format   (time))
+            (lastModifiedBy     format (format))
+            nil
+            (lastUnpacked       format   (time))
+            (lastUnpackedBy     format (format))
+            nil
+            (lastWrapped        format   (time))
+            (lastWrappedBy      format (format))
+            (lastUnwrapped      format   (time))
+            (lastUnwrappedBy    format (format))))
 (bui-define-interface aem:packages-extensive info
   :format '((jcr:uuid           format (format))
             nil
