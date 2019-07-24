@@ -163,14 +163,21 @@ using the `url.el' package."
     'xml
     callback))
 
-(defun aem-download-package (domain path downloadName &optional group callback)
+(defun aem-download-package (domain localPath &rest args)
   ""
 
-  (url-copy-file
-    (aem--create-URI domain (concat "/etc/packages/" (if group
-                                                         (concat group "/")
-                                                       "") downloadName))
-    (concat (directory-file-name path) "/" downloadName)))
+  (let ((path  (plist-get args :path ))
+        (group (plist-get args :group))
+        (name  (plist-get args :name )))
+    (url-copy-file
+      (aem--create-URI domain (if path path (concat
+                                              "/etc/packages/"
+                                              (if group (concat group "/") "")
+                                              name)))
+      (concat
+        (directory-file-name localPath)
+        "/"
+        (if path (file-name-nondirectory path) name)))))
 
 
 
