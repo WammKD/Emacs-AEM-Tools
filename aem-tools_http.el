@@ -145,6 +145,16 @@ using the `url.el' package."
 (defun aem-get-packages (domain &optional callback)
   ""
 
+  (cdr-assoc 'results (aem--request
+                        aem--REQUEST_GET
+                        (aem--create-URI domain "/crx/packmgr/list.jsp")
+                        '()
+                        '()
+                        'json
+                        callback)))
+(defun aem-get-packages-extensive (domain &optional callback)
+  ""
+
   (cdr-assoc 'hits (aem-query domain '((path           .   /etc/packages)
                                        (property       . jcr:primaryType)
                                        (property.value .         nt:file)

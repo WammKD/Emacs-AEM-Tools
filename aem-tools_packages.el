@@ -104,8 +104,8 @@
                                                                     filts
                                                                     '()))))))
                        (cons (cons (cons 'id final) final) result))))
-                 (aem-get-packages (aem--account-get-uri
-                                     aem--accounts-current-active))
+                 (aem-get-packages-extensive (aem--account-get-uri
+                                               aem--accounts-current-active))
                  '()))
     (otherwise (error "Unknown search type: %S" searchType))))
 (defun aem--packages-get-entries-simplified (&optional searchType &rest searchValues)
