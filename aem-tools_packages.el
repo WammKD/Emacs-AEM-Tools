@@ -156,6 +156,28 @@
     (otherwise (error "Unknown search type: %S" searchType))))
 
 
+(bui-define-entry-type aem:packages
+  :titles               '((pid                . "ID")
+                          (groupTitle         . "Group Title")
+                          (fixedBugs          . "Fixed Bugs")
+                          (size               . "File Size")
+                          (builtWith          . "Built With")
+                          (buildCount         . "Build Count")
+                          (providerName       . "Provider Name")
+                          (providerUrl        . "Provider URL")
+                          (providerLink       . "Provider Link")
+                          (testedWith         . "Tested With")
+                          (created            . "Last Created")
+                          (createdBy          . "Last Created By")
+                          (lastModified       . "Last Modified")
+                          (lastModifiedBy     . "Last Modified By")
+                          (lastUnpacked       . "Last Unpacked")
+                          (lastUnpackedBy     . "Last Unpacked By")
+                          (lastWrapped        . "Last Wrapped")
+                          (lastWrappedBy      . "Last Wrapped By")
+                          (lastUnwrapped      . "Last Unwrapped")
+                          (lastUnwrappedBy    . "Last Unwrapped By"))
+  :get-entries-function #'aem--packages-get-entries)
 (bui-define-entry-type aem:packages-extensive
   :titles               '((jcr:uuid           . "UUID")
                           (fixedBugs          . "Fixed Bugs")
