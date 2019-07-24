@@ -47,39 +47,59 @@
                          "/\\.snapshot/"
                          (cdr-assoc 'jcr:path packageData))
                        result
-                     (let* ((content (cdr-assoc 'jcr:content    packageData))
-                            (def     (cdr-assoc 'vlt:definition     content))
-                            (filts   (cdr-assoc 'filter                 def))
-                            (sShots  (cdr-assoc 'screenshots            def))
-                            (final   `(,(assoc 'jcr:uuid               content)
-                                       ,(assoc 'group                      def)
-                                       ,(assoc 'name                       def)
-                                       ,(assoc 'version                    def)
-                                       ,(assoc ':jcr:data              content)
-                                       ,(assoc 'jcr:path           packageData)
-                                       ,(assoc 'description                def)
-                                       ,(assoc 'fixedBugs                  def)
-                                       ,(assoc 'testedWith                 def)
-                                       ,(assoc 'builtWith                  def)
-                                       ,(assoc 'buildCount                 def)
-                                       ,(assoc 'providerName               def)
-                                       ,(assoc 'providerUrl                def)
-                                       ,(assoc 'providerLink               def)
-                                       ,(assoc 'jcr:created                def)
-                                       ,(assoc 'jcr:createdBy              def)
-                                       ,(assoc 'jcr:lastModified           def)
-                                       ,(assoc 'jcr:lastModifiedBy         def)
-                                       ,(assoc 'lastWrapped                def)
-                                       ,(assoc 'lastWrappedBy              def)
-                                       ,(assoc 'lastUnwrapped              def)
-                                       ,(assoc 'lastUnwrappedBy            def)
-                                       ,(cons 'filters (reverse (seq-reduce
-                                                                  (lambda (result filter)
-                                                                    (if (not (listp (cdr filter)))
-                                                                        result
-                                                                      (cons (cdr filter) result)))
-                                                                  filts
-                                                                  '()))))))
+                     (let* ((content   (cdr-assoc 'jcr:content    packageData))
+                            (def       (cdr-assoc 'vlt:definition     content))
+                            (filts     (cdr-assoc 'filter                 def))
+                            (sShots    (cdr-assoc 'screenshots            def))
+                            (created   (assoc     'jcr:created            def))
+                            (modified  (assoc     'jcr:lastModified       def))
+                            (unpacked  (assoc     'lastUnpacked           def))
+                            (final     `(,(assoc 'jcr:uuid               content)
+                                         ,(assoc 'group                      def)
+                                         ,(assoc 'name                       def)
+                                         ,(assoc 'version                    def)
+                                         ,(assoc ':jcr:data              content)
+                                         ,(assoc 'jcr:path           packageData)
+                                         ,(assoc 'description                def)
+                                         ,(assoc 'fixedBugs                  def)
+                                         ,(assoc 'testedWith                 def)
+                                         ,(assoc 'builtWith                  def)
+                                         ,(assoc 'buildCount                 def)
+                                         ,(assoc 'providerName               def)
+                                         ,(assoc 'providerUrl                def)
+                                         ,(assoc 'providerLink               def)
+                                         ,created
+                                         ,(assoc 'jcr:createdBy              def)
+                                         ,modified
+                                         ,(assoc 'jcr:lastModifiedBy         def)
+                                         ,unpacked
+                                         ,(assoc 'lastUnpackedBy             def)
+                                         ,(assoc 'lastWrapped                def)
+                                         ,(assoc 'lastWrappedBy              def)
+                                         ,(assoc 'lastUnwrapped              def)
+                                         ,(assoc 'lastUnwrappedBy            def)
+                                         ,(cons 'status (let ((c (cdr  created))
+                                                              (m (cdr modified))
+                                                              (u (cdr unpacked)))
+                                                          (cond
+                                                           ((and (not u) (not c))  "Build")
+                                                           ((and
+                                                              c
+                                                              m
+                                                              (time-less-p
+                                                                (date-to-time c)
+                                                                (date-to-time m))) "Rebuild")
+                                                           ((and
+                                                              (not u)
+                                                              (not (equal c m)))   "Install")
+                                                           (t                      "Share"))))
+                                         ,(cons 'filters (reverse (seq-reduce
+                                                                    (lambda (result filter)
+                                                                      (if (not (listp (cdr filter)))
+                                                                          result
+                                                                        (cons (cdr filter) result)))
+                                                                    filts
+                                                                    '()))))))
                        (cons (cons (cons 'id final) final) result))))
                  (aem-get-packages (aem--account-get-uri
                                      aem--accounts-current-active))
@@ -210,11 +230,12 @@
 (bui-define-interface aem:packages list
   :buffer-name       "*Packages*"
   :describe-function 'aem--packages-list-describe
-  :format            '((name               nil 55 t)
+  :format            '((name               nil 52 t)
                        (version            nil 24 t)
                        (:jcr:data          nil 10 bui-list-sort-numerically-3 :right-align t)
                        (jcr:lastModified   nil 32 t)
-                       (jcr:lastModifiedBy nil 25 t))
+                       (jcr:lastModifiedBy nil 21 t)
+                       (status             nil  7 t))
   :sort-key          '(jcr:lastModified))
 (bui-define-interface aem:packages-simplified list
   :buffer-name       "*Packages, Simplified*"
