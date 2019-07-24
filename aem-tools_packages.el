@@ -221,18 +221,31 @@
 
 
   ; Interactive Functions to Call
-(defun aem-packages-list-download-packages (downloadLocation)
+(defun aem-packages-list-download-packages (downloadLocation packages)
+  "Download the PACKAGES at point, or all marked, to path DOWNLOADLOCATION."
+  (interactive (list
+                 (read-directory-name "Download Package(s) to: ")
+                 (or (bui-list-get-marked-id-list) (list (bui-list-current-id)))))
+
+  (dolist (package packages)
+    (aem-download-package
+      (aem--account-get-uri aem--accounts-current-active)
+      downloadLocation
+      :path (cdr-assoc 'jcr:path package))))
+(defun aem-packages-simplified-list-download-packages (downloadLocation)
   "Download the package at point or all marked to path DOWNLOADLOCATION."
   (interactive (list (read-directory-name "Download Package(s) to: ")))
 
   (dolist (package (or (bui-list-get-marked-id-list) (list (bui-list-current-id))))
     (aem-download-package
       (aem--account-get-uri
-        aem--accounts-current-active)   downloadLocation
-      (cdr-assoc 'downloadName package) (cdr-assoc 'group package))))
+        aem--accounts-current-active)         downloadLocation
+      :name (cdr-assoc 'downloadName package) :group (cdr-assoc 'group package))))
 
 (define-key aem:packages-list-mode-map (kbd "d")
   'aem-packages-list-download-packages)
+(define-key aem:packages-simplified-list-mode-map (kbd "d")
+  'aem-packages-simplified-list-download-packages)
 
 
 (defun aem-packages ()
