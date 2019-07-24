@@ -39,6 +39,26 @@
 (defun aem--packages-get-entries (&optional searchType &rest searchValues)
   ""
 
+  (pcase (or searchType 'all)
+    ('id       searchValues)
+    ('all      (mapcar
+                 (lambda (packageData)
+                   (let ((wStat (cons
+                                  (cons
+                                    'status
+                                    (let ((c (cdr-assoc 'created      packageData))
+                                          (m (cdr-assoc 'lastModified packageData))
+                                          (u (cdr-assoc 'lastUnpacked packageData)))
+                                      (cond
+                                       ((and (not u) (not c))             "Build")
+                                       ((and c m (< c m))               "Rebuild")
+                                       ((and (not u) (not (equal c m))) "Install")
+                                       (t                                 "Share"))))
+                                  packageData)))
+                   (cons (cons 'id wStat) wStat)))
+                 (aem-get-packages (aem--account-get-uri
+                                     aem--accounts-current-active))))
+    (otherwise (error "Unknown search type: %S" searchType))))
 (defun aem--packages-get-entries-extensive (&optional searchType &rest searchValues)
   ""
 
