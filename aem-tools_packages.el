@@ -39,6 +39,9 @@
 (defun aem--packages-get-entries (&optional searchType &rest searchValues)
   ""
 
+(defun aem--packages-get-entries-extensive (&optional searchType &rest searchValues)
+  ""
+
   (pcase (or searchType 'all)
     ('id       searchValues)
     ('all      (seq-reduce
@@ -133,7 +136,7 @@
     (otherwise (error "Unknown search type: %S" searchType))))
 
 
-(bui-define-entry-type aem:packages
+(bui-define-entry-type aem:packages-extensive
   :titles               '((jcr:uuid           . "UUID")
                           (fixedBugs          . "Fixed Bugs")
                           (:jcr:data          . "File Size")
@@ -154,7 +157,7 @@
                           (lastWrappedBy      . "Last Wrapped By")
                           (lastUnwrapped      . "Last Unwrapped")
                           (lastUnwrappedBy    . "Last Unwrapped By"))
-  :get-entries-function #'aem--packages-get-entries)
+  :get-entries-function #'aem--packages-get-entries-extensive)
 (bui-define-entry-type aem:packages-simplified
   :titles               '((downloadName   . "Download Name")
                           (createdBy      . "Created By")
@@ -166,7 +169,7 @@
 
 
   ; Info.
-(bui-define-interface aem:packages info
+(bui-define-interface aem:packages-extensive info
   :format '((jcr:uuid           format (format))
             nil
             (group              format (format))
@@ -216,10 +219,10 @@
             (lastUnpackedBy format (format))))
 
 
-(defun aem--packages-list-describe (&rest packages)
+(defun aem--packages-extensive-list-describe (&rest packages)
   "Display 'info' buffer for PACKAGES."
 
-  (bui-get-display-entries 'aem:packages 'info (cons 'id packages)))
+  (bui-get-display-entries 'aem:packages-extensive  'info (cons 'id packages)))
 (defun aem--packages-simplified-list-describe (&rest packages)
   "Display 'info' buffer for PACKAGES."
 
@@ -227,9 +230,9 @@
 
 
   ; List
-(bui-define-interface aem:packages list
+(bui-define-interface aem:packages-extensive list
   :buffer-name       "*Packages*"
-  :describe-function 'aem--packages-list-describe
+  :describe-function 'aem--packages-extensive-list-describe
   :format            '((name               nil 52 t)
                        (version            nil 24 t)
                        (:jcr:data          nil 10 bui-list-sort-numerically-3 :right-align t)
@@ -271,16 +274,16 @@
       :name (cdr-assoc 'downloadName package) :group (cdr-assoc 'group package))))
 
 (define-key aem:packages-list-mode-map (kbd "d")
-  'aem-packages-list-download-packages)
+  'aem-packages-extensive-list-download-packages)
 (define-key aem:packages-simplified-list-mode-map (kbd "d")
   'aem-packages-simplified-list-download-packages)
 
 
-(defun aem-packages ()
+(defun aem-packages-extensive ()
   "Display a list of AEM packages for an instance."
   (interactive)
 
-  (bui-list-get-display-entries 'aem:packages))
+  (bui-list-get-display-entries 'aem:packages-extensive))
 (defun aem-packages-simplified ()
   "Display a list of AEM packages for an instance."
   (interactive)
