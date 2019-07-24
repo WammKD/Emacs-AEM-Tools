@@ -118,7 +118,7 @@
   (browse-url (concat
                 (aem--account-get-uri aem--accounts-current-active)
                 "/crx/de/index.jsp#"
-                (cdr-assoc 'path nodeProps))))
+                (replace-regexp-in-string ":" "%3A" (cdr-assoc 'path nodeProps)))))
 (defun aem--crxde-open-page-in-browser (nodeProps)
   ""
 
