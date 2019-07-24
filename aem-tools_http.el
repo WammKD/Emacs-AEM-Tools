@@ -146,8 +146,6 @@ using the `url.el' package."
   ""
 
   (cdr-assoc 'hits (aem-query domain '((path           .   /etc/packages)
-                                       (group.1_group.p.not . true)
-                                       (group.1_group.path  . */.snapshot)
                                        (property       . jcr:primaryType)
                                        (property.value .         nt:file)
                                        (nodename       .           *.zip)
