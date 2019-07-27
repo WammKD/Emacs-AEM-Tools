@@ -381,6 +381,21 @@
   'aem-packages-simplified-list-download-packages)
 
 
+(defun aem-packages-open-in-browser (packages)
+  ""
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (dolist (package packages)
+    (browse-url (concat
+                  (aem--account-get-uri aem--accounts-current-active)
+                  "/crx/packmgr/index.jsp#"
+                  (replace-regexp-in-string ":" "%3A" (cdr-assoc 'path package))))))
+
+(define-key aem:packages-list-mode-map (kbd "o") 'aem-packages-open-in-browser)
+
+
 (defun aem-packages ()
   "Display a list of AEM packages for an instance."
   (interactive)
