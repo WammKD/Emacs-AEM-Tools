@@ -142,7 +142,7 @@
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-page-in-browser))
 
-(define-key aem:node-properties-list-mode-map (kbd "c") 'aem-node-properties-open-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "o") 'aem-node-properties-open-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "e") 'aem-node-properties-open-page-in-browser)
 
 (defun aem-crxde (path)
