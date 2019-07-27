@@ -123,6 +123,17 @@
                       (aem--account-get-uri aem--accounts-current-active) "/editor.html"
                       pagePath                                            ".html"))
       (message "There's no page anywhere on the path of this node!"))))
+(defun aem--crxde-delete-node (nodeProps)
+  ""
+
+  (let ((path (cdr-assoc 'path nodeProps)))
+    (when (yes-or-no-p (concat
+                         "Are you sure you want to delete the node at path "
+                         path
+                         "? "))
+      (aem-delete-node (aem--account-get-uri aem--accounts-current-active) path)
+
+      (aem-crxde (file-name-directory path)))))
 
 (defun aem--crxde-run-operation-on-node-properties (operation)
   ""
