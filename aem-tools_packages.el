@@ -395,6 +395,17 @@
                   (aem--account-get-uri aem--accounts-current-active)
                   "/crx/packmgr/index.jsp#"
                   (replace-regexp-in-string ":" "%3A" (cdr-assoc 'path package))))))
+(defun aem-packages-open-browser ()
+  ""
+  (interactive)
+
+  (browse-url (concat
+                (aem--account-get-uri aem--accounts-current-active)
+                "/crx/packmgr/index.jsp")))
+
+(define-key aem:packages-list-mode-map (kbd "O") 'aem-packages-open-browser)
+
+
 
 (define-key aem:packages-list-mode-map (kbd "o") 'aem-packages-open-in-browser)
 
