@@ -465,6 +465,34 @@
 (define-key aem:packages-list-mode-map (kbd "I") 'aem-packages-install)
 
 
+(defun aem-packages-delete (packages)
+  ""
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (let ((s (seq-reduce
+             (lambda (result package)
+               (let ((name (cdr-assoc 'name package)))
+                 (if (not (yes-or-no-p
+                            (concat "Really delete package " name "? ")))
+                     result
+                   (aem-delete-package
+                     (aem--account-get-uri aem--accounts-current-active)
+                     (cdr-assoc 'path package))
+
+                   (concat ", \"" name "\"" result))))
+             packages
+             "")))
+    (when (> (length s) 2)
+      (when (eq major-mode 'aem:packages-list-mode)
+        (revert-buffer nil t)
+
+        (message (concat "Deleted package(s) " (substring s 2) "!"))))))
+
+(define-key aem:packages-list-mode-map (kbd "k") 'aem-packages-delete)
+
+
 
 (define-key aem:packages-list-mode-map (kbd "o") 'aem-packages-open-in-browser)
 
