@@ -320,7 +320,7 @@
                        (status         nil  7 t))
   :sort-key          '(lastModified))
 (bui-define-interface aem:packages-extensive list
-  :buffer-name       "*Packages*"
+  :buffer-name       "*Packages, Extensive*"
   :describe-function 'aem--packages-extensive-list-describe
   :format            '((name               nil 52 t)
                        (version            nil 24 t)
