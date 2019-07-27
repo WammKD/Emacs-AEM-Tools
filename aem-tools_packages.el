@@ -434,6 +434,37 @@
 (define-key aem:packages-list-mode-map (kbd "b") 'aem-packages-build)
 
 
+(defun aem-packages-install (packages)
+  ""
+  (interactive (list (or
+                       (bui-list-get-marked-id-list)
+                       (list (bui-list-current-id)))))
+
+  (let ((r (seq-reduce
+             (lambda (result package)
+               (let ((name (cdr-assoc 'name package)))
+                 (if (not (yes-or-no-p
+                            (concat "Really install package " name "? ")))
+                     result
+                   (aem-install-package
+                     (aem--account-get-uri aem--accounts-current-active)
+                     (cdr-assoc 'path package))
+
+                   (cons name (concat ", \"" name "\"" (cdr result))))))
+             packages
+             '("" . ""))))
+    (when (> (length (cdr r)) 2)
+      (when (eq major-mode 'aem:packages-list-mode)
+        (revert-buffer nil t)
+
+        (search-forward (car r))
+        (move-beginning-of-line 1)
+
+        (message (concat "Installed package(s) " (substring (cdr r) 2) "!"))))))
+
+(define-key aem:packages-list-mode-map (kbd "I") 'aem-packages-install)
+
+
 
 (define-key aem:packages-list-mode-map (kbd "o") 'aem-packages-open-in-browser)
 
