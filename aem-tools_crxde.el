@@ -198,7 +198,7 @@
                                 (widget-backward 1)
 
                                 (button-activate b))))
-  (local-set-key (kbd "c") '(lambda ()
+  (local-set-key (kbd "o") '(lambda ()
                               (interactive)
 
                               (forward-button 1)
