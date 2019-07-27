@@ -210,6 +210,16 @@
                                 (widget-backward 1)
 
                                 (aem--crxde-open-page-in-browser
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "k") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (widget-backward 1)
+
+                                (aem--crxde-delete-node
                                   (car (button-get b 'properties)))))))
 
 (provide 'aem-tools_crxde)
