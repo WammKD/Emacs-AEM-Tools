@@ -153,8 +153,15 @@
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-page-in-browser))
 
+(defun aem-node-properties-kill-node ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-delete-node))
+
 (define-key aem:node-properties-list-mode-map (kbd "o") 'aem-node-properties-open-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "e") 'aem-node-properties-open-page-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "K") 'aem-node-properties-kill-node)
 
 (defun aem-crxde (path)
   "Display content subnodes."
