@@ -493,8 +493,19 @@
 (define-key aem:packages-list-mode-map (kbd "k") 'aem-packages-delete)
 
 
+(defun aem-packages-add-filter (packages filterPath)
+  ""
+  (interactive (list
+                 (or (bui-list-get-marked-id-list) (list (bui-list-current-id)))
+                 (read-string "The path you want to set as a filter: ")))
 
-(define-key aem:packages-list-mode-map (kbd "o") 'aem-packages-open-in-browser)
+  (dolist (package packages)
+    (aem-add-filter-to-package
+      (aem--account-get-uri aem--accounts-current-active)
+      (cdr-assoc 'path package)
+      filterPath)))
+
+(define-key aem:packages-list-mode-map (kbd "a") 'aem-packages-add-filter)
 
 
 (defun aem-packages ()
