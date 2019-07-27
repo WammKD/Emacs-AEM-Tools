@@ -35,17 +35,6 @@
 
 
 ;; CRXde
-  ; Utility
-(defun aem--get-node-properties (node-info)
-  ""
-
-  (seq-filter #'(lambda (elem) (not (listp (cdr elem)))) node-info))
-(defun aem--get-node-subnodes (node-info)
-  ""
-
-  (seq-filter #'(lambda (elem) (listp (cdr elem))) node-info))
-
-
   ; Build Hierarchy
 (defun aem-get-node-hierarchy-elem (path)
   ""
