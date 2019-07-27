@@ -46,10 +46,13 @@
                    (let ((wStat (cons
                                   (cons
                                     'status
-                                    (let ((c (cdr-assoc 'created      packageData))
-                                          (m (cdr-assoc 'lastModified packageData))
-                                          (u (cdr-assoc 'lastUnpacked packageData)))
+                                    (let ((b (cdr-assoc 'buildCount    packageData))
+                                          (c (cdr-assoc 'created       packageData))
+                                          (m (cdr-assoc 'lastModified  packageData))
+                                          (u (cdr-assoc 'lastUnpacked  packageData))
+                                          (w (cdr-assoc 'lastUnwrapped packageData)))
                                       (cond
+                                       ((and b w (not u) (> b 0))       "Install")
                                        ((and (not u) (not c))             "Build")
                                        ((and c m (< c m))               "Rebuild")
                                        ((and (not u) (not (equal c m))) "Install")
