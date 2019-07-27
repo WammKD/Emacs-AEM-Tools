@@ -198,6 +198,34 @@ using the `url.el' package."
         "/"
         (if path (file-name-nondirectory path) name)))))
 
+(defun aem-add-filter-to-package (domain packagePath filterPath &optional callback)
+  ""
+
+  (let ((path (concat packagePath "/jcr:content/vlt:definition")))
+    (when (not (assoc 'filter (aem--get-node-subnodes (aem-get-subnodes domain path))))
+      (let ((json (aem-create-node
+                    domain
+                    (concat path "/filter")
+                    '((jcr:primaryType . nt:unstructured)))))
+        (when (not (= (cdr-assoc 'status.code json) 201))
+          (error (cdr-assoc 'status.message json)))))
+
+    (let ((lst (mapcar
+                 (lambda (elem)
+                   (string-to-number (substring (symbol-name (car elem)) 1)))
+                 (aem--get-node-subnodes
+                   (aem-get-subnodes
+                     (aem--account-get-uri aem--accounts-current-active)
+                     (concat path "/filter"))))))
+      (aem-create-node
+        domain
+        (concat path "/filter/f" (number-to-string (if (null lst)
+                                                       0
+                                                     (1+ (seq-max lst)))))
+        `((jcr:primaryType . nt:unstructured)
+          (mode            .         replace)
+          (root            .     ,filterPath))))))
+
 
 
 ;; Queries
@@ -336,6 +364,17 @@ using the `url.el' package."
     '()
     'dunno
     callback))
+
+(defun aem-create-node (domain path properties &optional callback)
+  ""
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain path)
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    properties
+    'json
+    callback))
+
 
 (provide 'aem-tools_http)
 
