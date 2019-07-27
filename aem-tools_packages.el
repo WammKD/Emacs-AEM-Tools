@@ -351,7 +351,18 @@
     (aem-download-package
       (aem--account-get-uri aem--accounts-current-active)
       downloadLocation
-      :path (cdr-assoc 'jcr:path package))))
+      :path (cdr-assoc 'path package))))
+(defun aem-packages-extensive-list-download-packages (downloadLocation packages)
+  "Download the PACKAGES at point, or all marked, to path DOWNLOADLOCATION."
+  (interactive (list
+                 (read-directory-name "Download Package(s) to: ")
+                 (or (bui-list-get-marked-id-list) (list (bui-list-current-id)))))
+
+  (dolist (package packages)
+    (aem-download-package
+      (aem--account-get-uri aem--accounts-current-active)
+      downloadLocation
+      :path (cdr-assoc 'path package))))""
 (defun aem-packages-simplified-list-download-packages (downloadLocation)
   "Download the package at point or all marked to path DOWNLOADLOCATION."
   (interactive (list (read-directory-name "Download Package(s) to: ")))
@@ -364,7 +375,7 @@
 
 (define-key aem:packages-list-mode-map (kbd "d")
   'aem-packages-list-download-packages)
-(define-key aem:packages-list-mode-map (kbd "d")
+(define-key aem:packages-extensive-list-mode-map (kbd "d")
   'aem-packages-extensive-list-download-packages)
 (define-key aem:packages-simplified-list-mode-map (kbd "d")
   'aem-packages-simplified-list-download-packages)
