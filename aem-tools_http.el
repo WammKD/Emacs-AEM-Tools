@@ -198,6 +198,39 @@ using the `url.el' package."
         "/"
         (if path (file-name-nondirectory path) name)))))
 
+(defun aem-build-package (domain packagePath &optional callback)
+  ""
+
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain "/crx/packmgr/service/.json" packagePath "?cmd=build")
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    '()
+    'dunno
+    callback))
+
+(defun aem-install-package (domain packagePath &optional callback)
+  ""
+
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain "/crx/packmgr/service/.json" packagePath)
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    '((cmd . install))
+    'dunno
+    callback))
+
+(defun aem-delete-package (domain packagePath &optional callback)
+  ""
+
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain "/crx/packmgr/service/.json" packagePath)
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    '((cmd . delete))
+    'dunno
+    callback))
+
 (defun aem-add-filter-to-package (domain packagePath filterPath &optional callback)
   ""
 
