@@ -162,8 +162,7 @@
 
     (message (concat "Uninstalling bundle(s) " u "…"))))
 
-(define-key aem:bundles-list-mode-map (kbd "d") 'aem-bundles-uninstall-bundle)
-(define-key aem:bundles-list-mode-map (kbd "U") 'aem-bundles-uninstall-bundle)
+(define-key aem:bundles-list-mode-map (kbd "k") 'aem-bundles-uninstall-bundle)
 
 
 (defun aem-bundles-open-in-browser (bundles)
