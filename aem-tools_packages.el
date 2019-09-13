@@ -395,6 +395,9 @@
                   (aem--account-get-uri aem--accounts-current-active)
                   "/crx/packmgr/index.jsp#"
                   (replace-regexp-in-string ":" "%3A" (cdr-assoc 'path package))))))
+
+(define-key aem:packages-list-mode-map (kbd "o") 'aem-packages-open-in-browser)
+
 (defun aem-packages-open-browser ()
   ""
   (interactive)
@@ -458,9 +461,9 @@
         (revert-buffer nil t)
 
         (search-forward (car r))
-        (move-beginning-of-line 1)
+        (move-beginning-of-line 1))
 
-        (message (concat "Installed package(s) " (substring (cdr r) 2) "!"))))))
+      (message (concat "Installed package(s) " (substring (cdr r) 2) "!")))))
 
 (define-key aem:packages-list-mode-map (kbd "I") 'aem-packages-install)
 
@@ -502,7 +505,7 @@
   (dolist (package packages)
     (aem-add-filter-to-package
       (aem--account-get-uri aem--accounts-current-active)
-      (cdr-assoc 'path package)
+      package
       filterPath)))
 
 (define-key aem:packages-list-mode-map (kbd "a") 'aem-packages-add-filter)
