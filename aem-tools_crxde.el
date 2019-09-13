@@ -155,6 +155,20 @@
                       (aem--account-get-uri aem--accounts-current-active) "/editor.html"
                       pagePath                                            ".html"))
       (message "There's no page anywhere on the path of this node!"))))
+(defun aem--crxde-create-node (nodeProps)
+  ""
+
+  (let ((path (cdr-assoc 'path nodeProps)))
+    (let ((nodeName (read-string (concat
+                                   "What name for the new node that will be created at "
+                                   path
+                                   "? "))))
+      (aem-create-node
+        (aem--account-get-uri aem--accounts-current-active)
+        (concat path "/" nodeName)
+        '(("jcr:primaryType" . "nt:unstructured")))
+
+      (aem-crxde path))))
 (defun aem--crxde-delete-node (nodeProps)
   ""
 
@@ -197,6 +211,11 @@
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-page-in-browser))
 
+(defun aem-node-properties-create-node ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-create-node))
 (defun aem-node-properties-kill-node ()
   ""
   (interactive)
@@ -208,6 +227,7 @@
 (define-key aem:node-properties-list-mode-map (kbd "K") 'aem-node-properties-kill-node)
 (define-key aem:node-properties-list-mode-map (kbd "b")   'aem-node-properties-open-site-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "P")   'aem-node-properties-open-properties-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "c +") 'aem-node-properties-create-node)
 
 (defun aem-crxde (path)
   "Display content subnodes."
@@ -283,6 +303,16 @@
                                 (widget-backward 1)
 
                                 (aem--crxde-open-page-in-browser
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "+") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (widget-backward 1)
+
+                                (aem--crxde-create-node
                                   (car (button-get b 'properties))))))
   (local-set-key (kbd "k") '(lambda ()
                               (interactive)
