@@ -268,7 +268,7 @@
 
 
 (defun aem-users-add-to-group (users)
-  "Add USERS to groups in AEM (list of groups provided by the function)."
+  "Add USERS to group in AEM (list of groups provided by the function)."
   (interactive (list (or
                        (bui-list-get-marked-id-list)
                        (list (bui-list-current-id)))))
@@ -298,7 +298,8 @@
       (when (eq major-mode 'aem:users-list-mode)
         (revert-buffer nil t))
 
-      (message (concat "Updated groups with user(s) " (substring listOf 2) "!")))))
+      (message
+        (concat "Updated group with user(s) " (substring (cdr listOf) 2) "!")))))
 
 (define-key aem:users-list-mode-map (kbd "a") 'aem-users-add-to-group)
       
