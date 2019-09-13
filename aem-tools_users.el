@@ -174,6 +174,10 @@
       ("409"     (message "Username already exists!"))
       ("201"     (pcase major-mode
                    ('aem:users-list-mode (revert-buffer nil t)
+
+                                         (search-forward username)
+                                         (move-beginning-of-line 1)
+
                                          (message (concat
                                                     "User "
                                                     username
@@ -296,7 +300,10 @@
                    '("" . ""))))
     (when (> (length (cdr listOf)) 2)
       (when (eq major-mode 'aem:users-list-mode)
-        (revert-buffer nil t))
+        (revert-buffer nil t)
+
+        (search-forward (car listOf))
+        (move-beginning-of-line 1))
 
       (message
         (concat "Updated group with user(s) " (substring (cdr listOf) 2) "!")))))
