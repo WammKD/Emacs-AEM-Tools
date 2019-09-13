@@ -53,8 +53,9 @@
   (let ((output  (get-buffer-create "*Groovy Console Output*"))
         (console (get-buffer-create "*Groovy Console*"       )))
     (split-window-below)
+    (other-window 1)
 
-    (switch-to-buffer-other-window output)
+    (switch-to-buffer output)
     (font-lock-mode)
     (other-window 1)
 
