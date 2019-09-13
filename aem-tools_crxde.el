@@ -222,10 +222,10 @@
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-delete-node))
 
-(define-key aem:node-properties-list-mode-map (kbd "o") 'aem-node-properties-open-in-browser)
-(define-key aem:node-properties-list-mode-map (kbd "e") 'aem-node-properties-open-page-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "o")   'aem-node-properties-open-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "b")   'aem-node-properties-open-site-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "P")   'aem-node-properties-open-properties-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "e")   'aem-node-properties-open-page-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "c +") 'aem-node-properties-create-node)
 (define-key aem:node-properties-list-mode-map (kbd "c k") 'aem-node-properties-kill-node)
 
