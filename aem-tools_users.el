@@ -291,10 +291,10 @@
                                                              groupName
                                                              groups))
 
-                       (concat ", \"" username "\"" result)))
-                  users
-                  "")))
-    (when (> (length listOf) 2)
+                       (cons username (concat ", \"" username "\"" (cdr result)))))
+                   users
+                   '("" . ""))))
+    (when (> (length (cdr listOf)) 2)
       (when (eq major-mode 'aem:users-list-mode)
         (revert-buffer nil t))
 
