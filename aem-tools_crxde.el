@@ -108,6 +108,38 @@
                 (aem--account-get-uri aem--accounts-current-active)
                 "/crx/de/index.jsp#"
                 (replace-regexp-in-string ":" "%3A" (cdr-assoc 'path nodeProps)))))
+(defun aem--crxde-open-site-in-browser (nodeProps)
+  ""
+
+  (let* ((path                                 (cdr-assoc 'path nodeProps))
+         (pagePath (substring path 0 (string-match-p "/jcr:content" path))))
+    (if (equal
+          (cdr-assoc
+            'jcr:primaryType
+            (aem-get-subnodes (aem--account-get-uri
+                                aem--accounts-current-active) pagePath))
+          "cq:Page")
+        (browse-url (concat
+                      (aem--account-get-uri aem--accounts-current-active)
+                      "/sites.html"
+                      pagePath))
+      (message "There's no page anywhere on the path of this node!"))))
+(defun aem--crxde-open-properties-in-browser (nodeProps)
+  ""
+
+  (let* ((path                                 (cdr-assoc 'path nodeProps))
+         (pagePath (substring path 0 (string-match-p "/jcr:content" path))))
+    (if (equal
+          (cdr-assoc
+            'jcr:primaryType
+            (aem-get-subnodes (aem--account-get-uri
+                                aem--accounts-current-active) pagePath))
+          "cq:Page")
+        (browse-url (concat
+                      (aem--account-get-uri aem--accounts-current-active)
+                      "/mnt/overlay/wcm/core/content/sites/properties.html?item="
+                      (url-hexify-string pagePath)))
+      (message "There's no page anywhere on the path of this node!"))))
 (defun aem--crxde-open-page-in-browser (nodeProps)
   ""
 
@@ -147,6 +179,18 @@
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-in-browser))
 
+(defun aem-node-properties-open-site-in-browser ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-site-in-browser))
+
+(defun aem-node-properties-open-properties-in-browser ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-properties-in-browser))
+
 (defun aem-node-properties-open-page-in-browser ()
   ""
   (interactive)
@@ -162,6 +206,8 @@
 (define-key aem:node-properties-list-mode-map (kbd "o") 'aem-node-properties-open-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "e") 'aem-node-properties-open-page-in-browser)
 (define-key aem:node-properties-list-mode-map (kbd "K") 'aem-node-properties-kill-node)
+(define-key aem:node-properties-list-mode-map (kbd "b")   'aem-node-properties-open-site-in-browser)
+(define-key aem:node-properties-list-mode-map (kbd "P")   'aem-node-properties-open-properties-in-browser)
 
 (defun aem-crxde (path)
   "Display content subnodes."
@@ -207,6 +253,26 @@
                                 (widget-backward 1)
 
                                 (aem--crxde-open-in-browser
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "b") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (widget-backward 1)
+
+                                (aem--crxde-open-site-in-browser
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "P") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (widget-backward 1)
+
+                                (aem--crxde-open-properties-in-browser
                                   (car (button-get b 'properties))))))
   (local-set-key (kbd "e") '(lambda ()
                               (interactive)
