@@ -199,8 +199,8 @@
                             (funcall get-td "Path" tbody)
                             "!"))))))
 
-(define-key aem:users-list-mode-map (kbd "c") 'aem-users-create)
-(define-key aem:users-info-mode-map (kbd "c") 'aem-users-create)
+(define-key aem:users-list-mode-map (kbd "+") 'aem-users-create)
+(define-key aem:users-info-mode-map (kbd "+") 'aem-users-create)
 
 
 (defun aem-users-set-profile (users)
