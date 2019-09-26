@@ -292,7 +292,9 @@
                               (forward-button 1)
 
                               (let ((b (button-at (point))))
-                                (widget-backward 1)
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
 
                                 (button-activate b))))
   (local-set-key (kbd "o") '(lambda ()
@@ -301,7 +303,9 @@
                               (forward-button 1)
 
                               (let ((b (button-at (point))))
-                                (widget-backward 1)
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
 
                                 (aem--crxde-open-in-browser
                                   (car (button-get b 'properties))))))
@@ -311,7 +315,9 @@
                               (forward-button 1)
 
                               (let ((b (button-at (point))))
-                                (widget-backward 1)
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
 
                                 (aem--crxde-open-site-in-browser
                                   (car (button-get b 'properties))))))
@@ -321,7 +327,9 @@
                               (forward-button 1)
 
                               (let ((b (button-at (point))))
-                                (widget-backward 1)
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
 
                                 (aem--crxde-open-properties-in-browser
                                   (car (button-get b 'properties))))))
@@ -331,7 +339,9 @@
                               (forward-button 1)
 
                               (let ((b (button-at (point))))
-                                (widget-backward 1)
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
 
                                 (aem--crxde-open-page-in-browser
                                   (car (button-get b 'properties))))))
@@ -341,7 +351,9 @@
                               (forward-button 1)
 
                               (let ((b (button-at (point))))
-                                (widget-backward 1)
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
 
                                 (aem--crxde-create-node
                                   (car (button-get b 'properties))))))
@@ -351,7 +363,9 @@
                               (forward-button 1)
 
                               (let ((b (button-at (point))))
-                                (widget-backward 1)
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
 
                                 (aem--crxde-delete-node
                                   (car (button-get b 'properties)))))))
