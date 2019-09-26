@@ -388,16 +388,6 @@ using the `url.el' package."
     'json
     callback))
 
-(defun aem-delete-node (domain path &optional callback)
-  ""
-  (aem--request
-    aem--REQUEST_DELETE
-    (aem--create-URI domain path)
-    '()
-    '()
-    'dunno
-    callback))
-
 (defun aem-create-or-update-node (domain path properties &optional callback)
   ""
   (aem--request
@@ -406,6 +396,16 @@ using the `url.el' package."
     '(("Content-Type" . "application/x-www-form-urlencoded"))
     properties
     'xml
+    callback))
+
+(defun aem-delete-node (domain path &optional callback)
+  ""
+  (aem--request
+    aem--REQUEST_DELETE
+    (aem--create-URI domain path)
+    '()
+    '()
+    'dunno
     callback))
 
 
