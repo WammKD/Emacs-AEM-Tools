@@ -236,7 +236,7 @@ using the `url.el' package."
 
   (let ((path (concat packagePath "/jcr:content/vlt:definition")))
     (when (not (assoc 'filter (aem--get-node-subnodes (aem-get-subnodes domain path))))
-      (let ((json (aem-create-node
+      (let ((json (aem-create-or-update-node
                     domain
                     (concat path "/filter")
                     '((jcr:primaryType . nt:unstructured)))))
@@ -250,7 +250,7 @@ using the `url.el' package."
                    (aem-get-subnodes
                      (aem--account-get-uri aem--accounts-current-active)
                      (concat path "/filter"))))))
-      (aem-create-node
+      (aem-create-or-update-node
         domain
         (concat path "/filter/f" (number-to-string (if (null lst)
                                                        0
@@ -398,14 +398,14 @@ using the `url.el' package."
     'dunno
     callback))
 
-(defun aem-create-node (domain path properties &optional callback)
+(defun aem-create-or-update-node (domain path properties &optional callback)
   ""
   (aem--request
     aem--REQUEST_POST
     (aem--create-URI domain path)
     '(("Content-Type" . "application/x-www-form-urlencoded"))
     properties
-    'json
+    'xml
     callback))
 
 
