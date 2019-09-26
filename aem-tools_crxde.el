@@ -163,10 +163,10 @@
                                    "What name for the new node that will be created at "
                                    path
                                    "? "))))
-      (aem-create-node
+      (aem-create-or-update-node
         (aem--account-get-uri aem--accounts-current-active)
         (concat path "/" nodeName)
-        '(("jcr:primaryType" . "nt:unstructured")))
+        '((jcr:primaryType . nt:unstructured)))
 
       (aem-crxde path))))
 (defun aem--crxde-delete-node (nodeProps)
