@@ -169,6 +169,31 @@
         '((jcr:primaryType . nt:unstructured)))
 
       (aem-crxde path))))
+(defun aem--crxde-update-node-property (nodeProps)
+  ""
+
+  (let ((path     (cdr-assoc 'path  nodeProps))
+        (name     (cdr-assoc 'name  nodeProps))
+        (oldValue (cdr-assoc 'value nodeProps)))
+    (let ((newValue (if (stringp oldValue)
+                        (read-string (concat
+                                       "Replacement value for "
+                                       (symbol-name name)
+                                       ": ")                     oldValue)
+                      (error "FUUUCK"))))
+      (aem-create-or-update-node
+        (aem--account-get-uri aem--accounts-current-active)
+        path
+        `((,name . ,newValue)))
+
+      (aem-crxde path)
+
+      (forward-button 1)
+      (let ((b (button-at (point))))
+        (move-beginning-of-line nil)
+        (button-activate b)
+        (search-forward (symbol-name name))
+        (move-beginning-of-line nil)))))
 (defun aem--crxde-delete-node (nodeProps)
   ""
 
@@ -216,12 +241,18 @@
   (interactive)
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-create-node))
+(defun aem-node-properties-update-node-property ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-update-node-property))
 (defun aem-node-properties-kill-node ()
   ""
   (interactive)
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-delete-node))
 
+(define-key aem:node-properties-list-mode-map (kbd "e")   'aem-node-properties-update-node-property)
 (define-key aem:node-properties-list-mode-map (kbd "N +") 'aem-node-properties-create-node)
 (define-key aem:node-properties-list-mode-map (kbd "N k") 'aem-node-properties-kill-node)
 (define-key aem:node-properties-list-mode-map (kbd "N o") 'aem-node-properties-open-in-browser)
