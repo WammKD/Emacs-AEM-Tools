@@ -155,6 +155,22 @@
                       (aem--account-get-uri aem--accounts-current-active) "/editor.html"
                       pagePath                                            ".html"))
       (message "There's no page anywhere on the path of this node!"))))
+(defun aem--crxde-view-page-as-published-in-browser (nodeProps)
+  ""
+
+  (let* ((path                                 (cdr-assoc 'path nodeProps))
+         (pagePath (substring path 0 (string-match-p "/jcr:content" path))))
+    (if (equal
+          (cdr-assoc
+            'jcr:primaryType
+            (aem-get-subnodes (aem--account-get-uri
+                                aem--accounts-current-active) pagePath))
+          "cq:Page")
+        (browse-url (concat
+                      (aem--account-get-uri aem--accounts-current-active)
+                      pagePath
+                      ".html?wcmmode=disabled"))
+      (message "There's no page anywhere on the path of this node!"))))
 (defun aem--crxde-create-node (nodeProps)
   ""
 
@@ -250,6 +266,12 @@
   (interactive)
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-in-browser))
+
+(defun aem-node-properties-view-page-as-published-in-browser ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-view-page-as-published-in-browser))
 
 (defun aem-node-properties-open-site-in-browser ()
   ""
@@ -362,6 +384,18 @@
                                   (widget-backward 1))
 
                                 (aem--crxde-open-in-browser
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "v") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
+
+                                (aem--crxde-view-page-as-published-in-browser
                                   (car (button-get b 'properties))))))
   (local-set-key (kbd "b") '(lambda ()
                               (interactive)
