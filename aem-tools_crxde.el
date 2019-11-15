@@ -422,7 +422,21 @@
                                   (widget-backward 1))
 
                                 (aem--crxde-delete-node
-                                  (car (button-get b 'properties)))))))
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "g") '(lambda ()
+                              (interactive)
+
+                              (beginning-of-buffer)
+                              (forward-button 1)
+
+                              (let ((path (cdr-assoc
+                                            'path
+                                            (car (button-get
+                                                   (button-at (point))
+                                                   'properties)))))
+                                (kill-buffer)
+
+                                (aem-crxde path)))))
 
 (provide 'aem-tools_crxde)
 
