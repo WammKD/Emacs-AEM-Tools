@@ -214,6 +214,44 @@
 
 
   ; Info.
+(defun aem--insert-filters (name entry)
+  ""
+
+  (seq-do
+    (lambda (filter)
+      (bui-info-insert-value-simple
+        (cdr-assoc 'root filter)
+        'mode-line-buffer-id)
+
+      (bui-insert-indent)
+
+      (bui-insert-action-button
+        "Delete"
+        (lambda (btn)
+          (let ((filterPath (concat
+                              (button-get btn 'path)
+                              "/jcr:content/vlt:definition/filter"))
+                (uri        (aem--account-get-uri aem--accounts-current-active)))
+            (aem-delete-node
+              uri
+              (concat
+                filterPath
+                "/"
+                (symbol-name
+                  (caar
+                    (seq-filter
+                      (lambda (node)
+                        (and (listp (cdr node)) (string-equal
+                                                  (cdr-assoc 'root  node)
+                                                  (button-get btn  'root))))
+                      (aem-get-subnodes uri filterPath))))))))
+        "Delete this filter."
+        'root (cdr-assoc 'root filter)
+        'path (cdr-assoc 'path  entry))
+
+      (insert "\n"))
+    (cdr-assoc 'filter entry)))
+
 (bui-define-interface aem:packages info
   :format '((group              format (format))
             (groupTitle         format (format))
@@ -227,6 +265,7 @@
             (fixedBugs          format (format))
             (testedWith         format (format))
             nil
+            (filter             format aem--insert-filters)
             (builtWith          format (format))
             (buildCount         format (format))
             nil
