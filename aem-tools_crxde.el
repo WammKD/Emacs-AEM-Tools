@@ -301,7 +301,22 @@
 
 (defun aem-crxde (path)
   "Display content subnodes."
-  (interactive (list (read-string "Path to retrieve: ")))
+  (interactive (list (completing-read
+                       "Path to retrieve: "
+                       (completion-table-dynamic
+                         (lambda (curr)
+                           (if (string-empty-p curr)
+                               '("/")
+                             (let* ((rev  (reverse curr))
+                                    (base (reverse
+                                            (substring rev (string-match-p "/" rev)))))
+                               (seq-filter
+                                 (lambda (elem) (string-prefix-p curr elem))
+                                 (mapcar
+                                   (lambda (elem) (concat base (symbol-name (car elem))))
+                                   (aem--get-node-subnodes
+                                     (aem-get-subnodes (aem--account-get-uri
+                                                         aem--accounts-current-active) base)))))))))))
 
   (switch-to-buffer (hierarchy-tree-display
                       (aem-build-node-hierarchy path)
