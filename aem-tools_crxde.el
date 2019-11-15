@@ -172,19 +172,32 @@
 (defun aem--crxde-update-node-property (nodeProps)
   ""
 
-  (let ((path     (cdr-assoc 'path  nodeProps))
-        (name     (cdr-assoc 'name  nodeProps))
-        (oldValue (cdr-assoc 'value nodeProps)))
-    (let ((newValue (if (stringp oldValue)
-                        (read-string (concat
-                                       "Replacement value for "
-                                       (symbol-name name)
-                                       ": ")                     oldValue)
-                      (error "FUUUCK"))))
+  (let ((path         (cdr-assoc 'path  nodeProps))
+        (name         (cdr-assoc 'name  nodeProps))
+        (oldValue     (cdr-assoc 'value nodeProps))
+        (updateVector (lambda (ovIndex ovLength result)
+                        (let ((value (read-string
+                                       (concat
+                                         "Array value (leave blank to stop "
+                                         "adding values to the updated array): ")
+                                       (when (< ovIndex ovLength)
+                                         (aref oldValue ovIndex)))))
+                          (if (string-empty-p value)
+                              (reverse result)
+                            (funcall updateVector
+                                      (1+ ovIndex)
+                                      ovLength
+                                      (cons value result)))))))
+    (let ((newValues (if (stringp oldValue)
+                         (list (read-string (concat
+                                              "Replacement value for "
+                                              (symbol-name name)
+                                              ": ")                     oldValue))
+                       (funcall updateVector 0 (length oldValue) '()))))
       (aem-create-or-update-node
         (aem--account-get-uri aem--accounts-current-active)
         path
-        `((,name . ,newValue)))
+        (mapcar (lambda (elem) (cons name elem)) newValues))
 
       (aem-crxde path)
 
