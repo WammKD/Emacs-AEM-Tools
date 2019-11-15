@@ -408,6 +408,17 @@ using the `url.el' package."
     'dunno
     callback))
 
+(defun aem-delete-node-property (domain path propertyNames &optional callback)
+  ""
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain path)
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    (mapcar (lambda (propertyName)
+              (cons (concat propertyName "@Delete") "")) propertyNames)
+    'xml
+    callback))
+
 
 (provide 'aem-tools_http)
 

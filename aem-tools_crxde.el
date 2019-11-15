@@ -194,6 +194,26 @@
         (button-activate b)
         (search-forward (symbol-name name))
         (move-beginning-of-line nil)))))
+(defun aem--crxde-delete-node-property (nodeProps)
+  ""
+
+  (let ((path (cdr-assoc 'path nodeProps))
+        (name (cdr-assoc 'name nodeProps)))
+    (when (yes-or-no-p (concat
+                         "Are you sure you want to delete the property of node "
+                         path
+                         "? "))
+      (aem-delete-node-property
+        (aem--account-get-uri aem--accounts-current-active)
+        path
+        (list (symbol-name name)))
+
+      (aem-crxde path)
+
+      (forward-button 1)
+      (let ((b (button-at (point))))
+        (move-beginning-of-line nil)
+        (button-activate b)))))
 (defun aem--crxde-delete-node (nodeProps)
   ""
 
@@ -246,6 +266,11 @@
   (interactive)
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-update-node-property))
+(defun aem-node-properties-delete-node-property ()
+  ""
+  (interactive)
+
+  (aem--crxde-run-operation-on-node-properties 'aem--crxde-delete-node-property))
 (defun aem-node-properties-kill-node ()
   ""
   (interactive)
@@ -253,6 +278,7 @@
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-delete-node))
 
 (define-key aem:node-properties-list-mode-map (kbd "e")   'aem-node-properties-update-node-property)
+(define-key aem:node-properties-list-mode-map (kbd "k")   'aem-node-properties-delete-node-property)
 (define-key aem:node-properties-list-mode-map (kbd "N +") 'aem-node-properties-create-node)
 (define-key aem:node-properties-list-mode-map (kbd "N k") 'aem-node-properties-kill-node)
 (define-key aem:node-properties-list-mode-map (kbd "N o") 'aem-node-properties-open-in-browser)
