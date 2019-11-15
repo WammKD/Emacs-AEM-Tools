@@ -259,14 +259,17 @@
                        path
                        settings)
 
-                     (concat ", \""  username "\"" result)))))
+                     (cons username (concat ", \""  username "\"" (cdr result)))))))
              users
-             "")))
-    (when (> (length s) 2)
+             '("" . ""))))
+    (when (> (length (cdr s)) 2)
       (when (eq major-mode 'aem:users-list-mode)
-        (revert-buffer nil t))
+        (revert-buffer nil t)
 
-      (message (concat "Updated the profile(s) of " (substring s 2) "!")))))
+        (search-forward (car s))
+        (move-beginning-of-line 1))
+
+      (message (concat "Updated the profile(s) of " (substring (cdr s) 2) "!")))))
 
 (define-key aem:users-list-mode-map (kbd "S") 'aem-users-set-profile)
 
