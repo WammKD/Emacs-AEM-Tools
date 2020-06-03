@@ -28,6 +28,7 @@
 ;;; Code:
 (require 'json)
 (require 'seq)
+(require 'subr-x)
 (require 'url)
 
 
@@ -397,6 +398,26 @@ using the `url.el' package."
     '()
     'json
     callback))
+
+(defun aem-get-file-contents (domain path &optional callback)
+  ""
+  (if-let ((details (seq-filter
+                      #'(lambda (elem) (eq (car elem) 'jcr:content))
+                      (aem--get-node-subnodes (aem-get-subnodes domain path)))))
+    (if (and
+          (assoc 'jcr:mimeType (car details))
+          (member (cdr-assoc 'jcr:mimeType (car details)) '("text/html"
+                                                            "text/javascript"
+                                                            "text/css")))
+        (aem--request
+          aem--REQUEST_GET
+          (aem--create-URI domain path)
+          '()
+          '()
+          'dunno
+          callback)
+      nil)
+    nil))
 
 (defun aem-create-or-update-node (domain path properties &optional callback)
   ""
