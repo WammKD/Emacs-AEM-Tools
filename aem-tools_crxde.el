@@ -28,6 +28,7 @@
 ;;; Code:
 (require 'hierarchy)
 (require 'seq)
+(require 'subr-x)
 
 ; Internal Files
 (require 'aem-tools_accounts)
@@ -290,6 +291,23 @@
   (interactive)
 
   (aem--crxde-run-operation-on-node-properties 'aem--crxde-open-page-in-browser))
+
+
+(defun aem-crxde-view-delete ()
+  ""
+  (interactive)
+
+  (when-let ((windows (seq-filter
+                        (lambda (window)
+                          (string-match-p
+                            (concat
+                              "^*AEM View, "
+                              (aem--account-get-alias aem--accounts-current-active)
+                              ": ")
+                            (buffer-name (window-buffer window))))
+                        (window-list))))
+    (  quit-window nil (car windows))
+    (delete-window (car windows))))
 
 (defun aem-node-properties-create-node ()
   ""
