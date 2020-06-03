@@ -419,6 +419,16 @@ using the `url.el' package."
       nil)
     nil))
 
+(defun aem-update-node-file (domain filePath contents &optional callback)
+  ""
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain "/crx/server/crx.default/jcr:root")
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    `((,(concat filePath "/jcr:content/jcr:data") . ,contents))
+    'dunno
+    callback))
+
 (defun aem-create-or-update-node (domain path properties &optional callback)
   ""
   (aem--request
