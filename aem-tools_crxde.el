@@ -172,6 +172,85 @@
                       pagePath
                       ".html?wcmmode=disabled"))
       (message "There's no page anywhere on the path of this node!"))))
+(defun aem--crxde-view-file (nodeProps)
+  ""
+
+  (let* ((tempPath (cdr-assoc 'path nodeProps))
+         (path     (substring tempPath 0 (string-match-p "/jcr:content" tempPath)))
+         (buf      (get-buffer-create
+                     (concat
+                       "*AEM View, "
+                       (aem--account-get-alias aem--accounts-current-active)
+                       ": "
+                       (car (reverse (split-string path "/")))
+                   "*"))))
+    (split-window-right)
+    (other-window 1)
+    (switch-to-buffer buf)
+
+    (when (string-equal (buffer-string) "")
+      (if-let ((contents (aem-get-file-contents
+                           (aem--account-get-uri aem--accounts-current-active)
+                           path)))
+          (progn
+            (insert contents)
+            (beginning-of-buffer)
+
+            (read-only-mode t)
+            (mapcar
+              (lambda (pair)
+                (when (string-match-p (car pair) path)
+                  (ignore-errors (funcall (cdr pair)))))
+              (reverse auto-mode-alist))
+            (local-set-key (kbd "q") 'aem-crxde-view-delete))
+        (kill-buffer-and-window)))
+
+    (when (buffer-live-p buf)
+      (other-window -1))))
+(defun aem--crxde-edit-file (nodeProps)
+  ""
+
+  (let ((path      (substring
+                     (cdr-assoc 'path nodeProps)
+                     0
+                     (string-match-p "/jcr:content" (cdr-assoc 'path nodeProps))))
+        (winConfig (current-window-configuration)))
+    (delete-other-windows)
+    (switch-to-buffer (get-buffer-create
+                        (concat
+                          "*AEM Edit, "
+                          (aem--account-get-alias aem--accounts-current-active)
+                          ": "
+                          (car (reverse (split-string path "/")))
+                          "*")))
+
+    (if-let ((contents (aem-get-file-contents
+                         (aem--account-get-uri aem--accounts-current-active)
+                         path)))
+        (progn
+          (insert contents)
+          (beginning-of-buffer)
+          (mapcar
+            (lambda (pair)
+              (when (string-match-p (car pair) path)
+                (ignore-errors (funcall (cdr pair)))))
+            (reverse auto-mode-alist))
+          (local-set-key (kbd "C-c C-c") `(lambda ()
+                                            (interactive)
+
+                                            (aem-update-node-file
+                                              (aem--account-get-uri aem--accounts-current-active)
+                                              ,path
+                                              (buffer-substring-no-properties (point-min) (point-max)))
+                                            (kill-buffer)
+                                            (set-window-configuration ',winConfig)))
+          (local-set-key (kbd "C-c C-k") `(lambda ()
+                                            (interactive)
+
+                                            (kill-buffer)
+                                            (set-window-configuration ',winConfig))))
+      (kill-buffer)
+      (set-window-configuration winConfig))))
 (defun aem--crxde-create-node (nodeProps)
   ""
 
