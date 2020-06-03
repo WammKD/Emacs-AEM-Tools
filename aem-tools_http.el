@@ -378,6 +378,16 @@ using the `url.el' package."
 
 
 ;; CRXde
+(defun aem-get-node (domain path &optional callback)
+  ""
+  (aem--request
+    aem--REQUEST_GET
+    (aem--create-URI domain path ".json")
+    '()
+    '()
+    'json
+    callback))
+
 (defun aem-get-subnodes (domain path &optional callback)
   ""
   (aem--request
