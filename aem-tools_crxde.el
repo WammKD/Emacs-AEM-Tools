@@ -530,6 +530,31 @@
 
                                 (aem--crxde-open-page-in-browser
                                   (car (button-get b 'properties))))))
+  (local-set-key (kbd "V") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
+
+                                (aem--crxde-view-file
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "E") '(lambda ()
+                              (interactive)
+
+                              (forward-button 1)
+
+                              (let ((b (button-at (point))))
+                                (if (string= (what-line) "Line 1")
+                                    (move-beginning-of-line nil)
+                                  (widget-backward 1))
+
+                                (aem--crxde-edit-file
+                                  (car (button-get b 'properties))))))
+  (local-set-key (kbd "Q") 'aem-crxde-view-delete)
   (local-set-key (kbd "+") '(lambda ()
                               (interactive)
 
