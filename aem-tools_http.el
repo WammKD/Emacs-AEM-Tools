@@ -429,6 +429,16 @@ using the `url.el' package."
     'dunno
     callback))
 
+(defun aem-create-folder (domain path properties &optional callback)
+  ""
+  (aem--request
+    aem--REQUEST_POST
+    (aem--create-URI domain path)
+    '(("Content-Type" . "application/x-www-form-urlencoded"))
+    '((jcr:primaryType . sling:Folder))
+    'xml
+    callback))
+
 (defun aem-create-or-update-node (domain path properties &optional callback)
   ""
   (aem--request
