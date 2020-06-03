@@ -353,7 +353,7 @@
                                (seq-filter
                                  (lambda (elem) (string-prefix-p curr elem))
                                  (mapcar
-                                   (lambda (elem) (concat base (symbol-name (car elem))))
+                                   (lambda (elem) (concat base (symbol-name (car elem)) "/"))
                                    (aem--get-node-subnodes
                                      (aem-get-subnodes (aem--account-get-uri
                                                          aem--accounts-current-active) base)))))))))))
